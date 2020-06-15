@@ -3,7 +3,6 @@ BASIC
 - add 2 profile: with h2 database, without database
 - add security
 - add hateoas
-- figure out how to avoid constant patterns for date and time
 
 ADDITIONAL
 - add some feature (activemq or rabbitmq)

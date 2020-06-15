@@ -55,10 +55,10 @@ public class OwnerControllerTest {
         //final DailyIncome income = new DailyIncome(spot.getBeginDate(),new BigDecimal(3.0));
         //WHEN
         mockMvc.perform(get(uriCheckDailyIncome, createDayFromBeginDateInString(spot.getBeginDate()))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 //.andExpect(content().json(objectMapper.writeValueAsString(income)))
                 .andDo(print())
                 .andReturn();
@@ -77,10 +77,10 @@ public class OwnerControllerTest {
         when(archivedSpotRepo.getAllByDay(any())).thenReturn(new ArrayList<>(Collections.singletonList(archivedSpot)));
 
         mockMvc.perform(get(uriCheckDailyIncome, createDayFromBeginDateInString(spot.getBeginDate()))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(income)))
                 .andDo(print())
                 .andReturn();
