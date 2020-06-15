@@ -58,29 +58,29 @@ public class DriverControllerTest {
         when(spotRepo.save(spot)).thenReturn(Optional.of(spot));
 
         mockMvc.perform(post(uriStartMeter)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(spot)))
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(spot)))
                 .andDo(print())
                 .andReturn();
     }
 
     @Test
-    @DisplayName("Should return redirection because vehicle is active")
+    @DisplayName("Should return redirection because a vehicle is active")
     public void shouldReturnRedirectionBecauseOfVehicleIsActive() throws Exception {
         //WHEN
         when(spotRepo.findByVehiclePlate(spot.getVehiclePlate()))
                 .thenThrow(new VehicleActiveInDbException(spot.getVehiclePlate()));
 
         mockMvc.perform(post(uriStartMeter)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(spot)))
                 //THEN
                 .andExpect(status().is3xxRedirection())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();
     }
@@ -93,11 +93,11 @@ public class DriverControllerTest {
         when(spotRepo.save(spot)).thenThrow(new VehicleCannotBeRegisteredInDbException(spot.getVehiclePlate()));
 
         mockMvc.perform(post(uriStartMeter)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(spot)))
                 //THEN
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();
     }
@@ -110,10 +110,10 @@ public class DriverControllerTest {
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
                 .param("finishDate", createTimeAfter2hInString(spot.getBeginDate()))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();
     }
@@ -128,10 +128,10 @@ public class DriverControllerTest {
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
                 .param("finishDate", createTimeAfter2hInString(spot.getBeginDate()))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(fee)))
                 .andDo(print())
                 .andReturn();

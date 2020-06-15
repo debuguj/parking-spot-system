@@ -2,6 +2,8 @@ package pl.debuguj.system.spot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
 import org.springframework.util.SerializationUtils;
 
 import javax.validation.ConstraintViolation;
@@ -90,6 +92,31 @@ class SpotTest {
         assertTrue(violations.size() > 0);
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"e12345",
+            "",
+            " ",
+            "     ",
+            "12345",
+            "qeee12345",
+            "registrationNo",
+            "qwe123456",
+            "qwe123",
+            "E12345",
+            "12345",
+            "QEEE12345",
+            "registrationNo",
+            "QWE123456",
+            "QWE123"})
+        //@CsvFileSource()
+    void shouldReturnViolationBecauseOfIncorrectRegistrationNumber(String number) {
+        Spot spot = new Spot(number, DriverType.REGULAR, startDate);
+
+        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
+        assertTrue(violations.size() <= 2, "Failure no:" + violations.size());
+    }
+
     @Test
     void shouldReturnOneViolationBecauseOfStartDateAsNull() {
         Spot spot = new Spot(registrationNumber, DriverType.REGULAR, null);
@@ -98,27 +125,4 @@ class SpotTest {
         assertTrue(violations.size() > 0);
     }
 
-    @Test
-    void shouldReturnViolationBecauseOfIncorrectRegistrationNumber() {
-        String[] registrationNumbers = {
-                "e12345",
-                "12345",
-                "qeee12345",
-                "registrationNo",
-                "qwe123456",
-                "qwe123",
-                "E12345",
-                "12345",
-                "QEEE12345",
-                "registrationNo",
-                "QWE123456",
-                "QWE123"};
-
-        for (String number : registrationNumbers) {
-            Spot spot = new Spot(number, DriverType.REGULAR, startDate);
-
-            Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-            assertEquals(violations.size(), 1);
-        }
-    }
 }
