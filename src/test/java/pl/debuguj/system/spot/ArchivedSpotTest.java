@@ -10,7 +10,9 @@ import javax.validation.ValidatorFactory;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +25,7 @@ class ArchivedSpotTest {
     private Date startDate;
     private Date finishDate;
     private Date incorrectFinishDate;
-
+    private CurrencyRate currencyRate = new CurrencyRate(new BigDecimal(1.0), Currency.getInstance(new Locale("pl", "PL")));
     private Validator validator;
 
     public ArchivedSpotTest() {
@@ -99,7 +101,7 @@ class ArchivedSpotTest {
             Date stop = simpleDateTimeFormatter.parse(finishDates[i]);
             ArchivedSpot archivedSpot = new ArchivedSpot(registrationNumber, DriverType.REGULAR, start, stop);
 
-            assertEquals(returnedFee[i], archivedSpot.getFee(Currency.PLN).get());
+            assertEquals(returnedFee[i], archivedSpot.getFee(currencyRate).get());
         }
     }
 
@@ -123,7 +125,12 @@ class ArchivedSpotTest {
             Date stop = simpleDateTimeFormatter.parse(endDates[i]);
             ArchivedSpot archivedSpot = new ArchivedSpot(registrationNumber, DriverType.VIP, start, stop);
 
-            assertEquals(returnedFee[i], archivedSpot.getFee(Currency.PLN).get());
+            assertEquals(returnedFee[i], archivedSpot.getFee(currencyRate).get());
         }
     }
 }
+
+
+
+
+

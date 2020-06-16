@@ -5,5 +5,5 @@ BASIC
 - add hateoas
 
 ADDITIONAL
-- add some feature (activemq or rabbitmq)
+- add some feature (active_mq or rabbit_mq)
 - tests in spock

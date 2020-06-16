@@ -26,7 +26,7 @@ public class SpotRepoInMemory implements SpotRepo {
     }
 
     @Override
-    public Optional<Spot> findByVehiclePlate(final String vehiclePlate) {
+    public Optional<Spot> findVehicleByPlate(final String vehiclePlate) {
         return mapParkingSpots.values()
                 .stream()
                 .filter(s -> vehiclePlate.equals(s.getVehiclePlate()))

@@ -18,9 +18,11 @@ public class Spot implements Serializable {
     @NotNull(message = "Vehicle plate must be provided.")
     @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$", message = "Invalid email address.")
     private final String vehiclePlate;
+
     @NotNull(message = "Driver type must be provided.")
     @DriverTypeSubSet(anyOf = {DriverType.REGULAR, DriverType.VIP})
     private final DriverType driverType;
+
     @NotNull(message = "Begin date must be provided.")
     private final Date beginDate;
 
