@@ -45,7 +45,7 @@ public class OperatorControllerTest {
     @DisplayName("Should return VehicleNotFoundException because vehicle is not active")
     public void shouldReturnExceptionBecauseVehicleIsNotActive() throws Exception {
         //WHEN
-        when(spotRepo.findByVehiclePlate(spot.getVehiclePlate())).thenThrow(new VehicleNotFoundException(spot.getVehiclePlate()));
+        when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenThrow(new VehicleNotFoundException(spot.getVehiclePlate()));
 
         mockMvc.perform(get(uriCheckVehicle, spot.getVehiclePlate())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -60,7 +60,7 @@ public class OperatorControllerTest {
     @DisplayName("Should return status OK because vehicle is active in db")
     public void shouldReturnOkBecauseVehicleIsActive() throws Exception {
         //WHEN
-        when(spotRepo.findByVehiclePlate(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
+        when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
 
         mockMvc.perform(get(uriCheckVehicle, spot.getVehiclePlate())
                 .contentType(MediaType.APPLICATION_JSON))

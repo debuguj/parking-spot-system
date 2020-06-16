@@ -67,7 +67,7 @@ class SpotRepoInMemoryTest {
         Spot spot = new Spot(registrationNumber, DriverType.REGULAR, beginDate);
         parkingSpaceRepo.save(spot);
 
-        Optional<Spot> psFromRepo = parkingSpaceRepo.findByVehiclePlate(registrationNumber);
+        Optional<Spot> psFromRepo = parkingSpaceRepo.findVehicleByPlate(registrationNumber);
 
         assertNotNull(psFromRepo);
         psFromRepo.ifPresent(c -> {
@@ -82,12 +82,12 @@ class SpotRepoInMemoryTest {
         Spot spot = new Spot(registrationNumber, DriverType.REGULAR, beginDate);
         parkingSpaceRepo.save(spot);
 
-        Optional<Spot> oSpot = parkingSpaceRepo.findByVehiclePlate(registrationNumber);
+        Optional<Spot> oSpot = parkingSpaceRepo.findVehicleByPlate(registrationNumber);
 
         assertTrue(oSpot.isPresent());
 
         String registrationNo = "WCI997755";
-        oSpot = parkingSpaceRepo.findByVehiclePlate(registrationNo);
+        oSpot = parkingSpaceRepo.findVehicleByPlate(registrationNo);
 
         assertFalse(oSpot.isPresent());
     }
@@ -98,7 +98,7 @@ class SpotRepoInMemoryTest {
         parkingSpaceRepo.save(spot);
         parkingSpaceRepo.delete(spot.getVehiclePlate());
 
-        Optional<Spot> oSpot = parkingSpaceRepo.findByVehiclePlate(registrationNumber);
+        Optional<Spot> oSpot = parkingSpaceRepo.findVehicleByPlate(registrationNumber);
 
         assertFalse(oSpot.isPresent());
     }

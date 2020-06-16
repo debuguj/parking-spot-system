@@ -3,7 +3,8 @@ package pl.debuguj.system.spot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.util.SerializationUtils;
 
 import javax.validation.ConstraintViolation;
@@ -17,7 +18,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpotTest {
@@ -65,15 +65,10 @@ class SpotTest {
 
     @Test
     public void shouldNotReturnErrorsForSpot() {
-        Spot spot1 = new Spot(registrationNumber, DriverType.REGULAR, startDate);
+        Spot spot = new Spot(registrationNumber, DriverType.REGULAR, startDate);
 
-        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot1);
+        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
         assertTrue(violations.isEmpty());
-
-        Spot spot2 = new Spot(registrationNumber, DriverType.REGULAR, startDate);
-
-        Set<ConstraintViolation<Spot>> violations2 = this.validator.validate(spot2);
-        assertTrue(violations2.isEmpty());
     }
 
     @Test
