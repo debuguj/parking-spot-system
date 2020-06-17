@@ -27,6 +27,7 @@ public class ParkingSpotsSystemApplication {
         SpringApplication.run(ParkingSpotsSystemApplication.class, args);
     }
 
+
     @Bean
     ApplicationRunner applicationRunner(Environment environment,
                                         @Value("${greetings-msg:Default hello}") String defaultValue,
