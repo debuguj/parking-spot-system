@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Repository
 public class SpotRepoInMemory implements SpotRepo {
 
-    //TODO: add limit for parking capacity
+    //TODO: add parking capacity limit
     private Map<String, Spot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
@@ -38,7 +38,4 @@ public class SpotRepoInMemory implements SpotRepo {
         return Optional.ofNullable(mapParkingSpots.remove(plate));
     }
 
-    public void clearRepo() {
-        this.mapParkingSpots.clear();
-    }
 }
