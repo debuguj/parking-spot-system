@@ -3,6 +3,8 @@ package pl.debuguj.system.spot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.util.SerializationUtils;
@@ -54,7 +56,7 @@ class SpotTest {
     }
 
     @Test
-    public void shouldBeSetCorrectParameters() {
+    public void shouldAcceptCorrectParameters() {
         Spot spot = new Spot(registrationNumber, DriverType.REGULAR, startDate);
 
         assertThat(spot.getVehiclePlate()).isEqualTo(registrationNumber);
@@ -69,22 +71,6 @@ class SpotTest {
 
         Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
         assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    public void shouldReturnOneViolationBecauseOfRegistrationPlateAsNullParameter() {
-        Spot spot = new Spot(null, DriverType.REGULAR, startDate);
-
-        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-        assertTrue(violations.size() > 0);
-    }
-
-    @Test
-    void shouldReturnOneViolationBecauseOfDriverTypeAsNull() {
-        Spot spot = new Spot(registrationNumber, null, startDate);
-
-        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-        assertTrue(violations.size() > 0);
     }
 
     @ParameterizedTest
@@ -104,20 +90,10 @@ class SpotTest {
             "registrationNo",
             "QWE123456",
             "QWE123"})
-        //@CsvFileSource()
     void shouldReturnViolationBecauseOfIncorrectRegistrationNumber(String number) {
         Spot spot = new Spot(number, DriverType.REGULAR, startDate);
 
         Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
         assertTrue(violations.size() <= 2, "Failure no:" + violations.size());
     }
-
-    @Test
-    void shouldReturnOneViolationBecauseOfStartDateAsNull() {
-        Spot spot = new Spot(registrationNumber, DriverType.REGULAR, null);
-
-        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-        assertTrue(violations.size() > 0);
-    }
-
 }

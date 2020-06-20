@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -21,7 +22,10 @@ public class ArchivedSpot implements Serializable {
     private final Date beginDate;
     private final Date finishDate;
 
-    public ArchivedSpot(final Spot spot, final Date finishDate) {
+    public ArchivedSpot(final Spot spot, final Date finishDate) throws DateTimeException {
+        if (spot.getBeginDate().after(finishDate)) {
+            throw new DateTimeException("Finish date is to late");
+        }
         this.vehiclePlate = spot.getVehiclePlate();
         this.driverType = spot.getDriverType();
         this.beginDate = spot.getBeginDate();

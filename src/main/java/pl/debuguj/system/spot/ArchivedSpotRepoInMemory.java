@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
+
+
     private static Map<UUID, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
