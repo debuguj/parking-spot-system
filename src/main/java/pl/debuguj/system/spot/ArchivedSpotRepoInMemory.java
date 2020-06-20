@@ -37,8 +37,4 @@ public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
         final LocalDateTime endDateTime = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         return Date.from(endDateTime.plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
     }
-
-    public void clearRepo() {
-        mapParkingSpots.clear();
-    }
 }
