@@ -1,6 +1,5 @@
 package pl.debuguj.system.spot;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -35,7 +34,7 @@ class SpotRepoInMemoryTest {
 
     @Test
     public void shouldReturnNotEmptyOptionalBecauseVehicleIsNotActive() {
-        Spot spot = createSimpleSpot("WZE12345");
+        final Spot spot = createSimpleSpot("WZE12345");
         Optional<Spot> opt = sut.save(spot);
 
         assertTrue(opt.isPresent());
@@ -43,22 +42,20 @@ class SpotRepoInMemoryTest {
 
     @Test
     public void shouldDeleteActiveSpot() {
-        Spot spot = createSimpleSpot("WZE12345");
-
+        final Spot spot = createSimpleSpot("WZE12345");
         sut.save(spot);
-
         Optional<Spot> found = sut.findVehicleByPlate("WZE12345");
+
         assertTrue(found.isPresent());
 
         sut.delete(spot.getVehiclePlate());
-
         Optional<Spot> notFound = sut.findVehicleByPlate("WZE12345");
+
         assertFalse(notFound.isPresent());
     }
 
     @Test
     public void shouldNotFindActiveParkingSpace() {
-
         Optional<Spot> notFound = sut.findVehicleByPlate("WZE12345");
 
         assertNotNull(notFound);

@@ -68,13 +68,12 @@ class ArchivedSpotTest {
     @Test
     public void shouldThrowExceptionBecauseFinishDateIsBeforeStartDate() {
         final Date[] incorrectStartStopTimestamps = createIncorrectStartStopTimeStamps();
-
         final Spot spot = new Spot("WZE12345", DriverType.REGULAR, incorrectStartStopTimestamps[0]);
+
         Exception exception = assertThrows(DateTimeException.class, () ->
                 new ArchivedSpot(spot, incorrectStartStopTimestamps[1]));
 
-        assertEquals("Finish date is to late", exception.getMessage());
-
+        assertEquals("Finish time is before start time", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -87,14 +86,12 @@ class ArchivedSpotTest {
             "2020-06-12T10:10:10, 2020-06-12T22:13:10, 8191.0"
     })
     public void shouldReturnCorrectFeeForRegularDriver(String startTime, String stopTime, String fee) throws Exception {
-
         final Date[] startStopTimestamps = createStartStopTimestampsByDates(startTime, stopTime);
         final BigDecimal feeValue = new BigDecimal(fee);
 
         ArchivedSpot archivedSpot = new ArchivedSpot("WZE12345", DriverType.REGULAR, startStopTimestamps[0], startStopTimestamps[1]);
 
         archivedSpot.getFee(currencyRate).ifPresent(f -> assertEquals(feeValue, f));
-
     }
 
     @ParameterizedTest
@@ -106,7 +103,6 @@ class ArchivedSpotTest {
             "2020-10-12T11:15:48, 2020-10-13T11:14:12, 44887.0"
     })
     public void shouldReturnCorrectFeeForVipDriver(String startTime, String stopTime, String fee) throws Exception {
-
         final Date[] startStopTimestamps = createStartStopTimestampsByDates(startTime, stopTime);
         final BigDecimal feeValue = new BigDecimal(fee);
 
@@ -132,7 +128,6 @@ class ArchivedSpotTest {
 
         return new Date[]{startDate, stopDate};
     }
-
 
     private Date[] createStartStopTimestampsByDates(String startTime, String stopTime) throws ParseException {
         final SimpleDateFormat simpleDateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

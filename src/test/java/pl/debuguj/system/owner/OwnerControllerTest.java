@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.debuguj.system.external.CurrencyRate;
 import pl.debuguj.system.external.CurrencyRateHandler;
 import pl.debuguj.system.spot.ArchivedSpot;
 import pl.debuguj.system.spot.ArchivedSpotRepo;
@@ -79,6 +80,7 @@ public class OwnerControllerTest {
         final DailyIncome income = new DailyIncome(day, new BigDecimal("3.0"));
         //WHEN
         when(archivedSpotRepo.getAllByDay(any())).thenReturn(new ArrayList<>(Collections.singletonList(archivedSpot)));
+        when(currencyRateHandler.getCurrencyRate()).thenReturn(CurrencyRate.PLN);
 
         mockMvc.perform(get(uriCheckDailyIncome, createDayFromBeginDateInString(spot.getBeginDate()))
                 .contentType(MediaType.APPLICATION_JSON))
