@@ -24,19 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpotTest {
 
-    private final SimpleDateFormat simpleDateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    private final String registrationNumber = "WZE12345";
-    private Date startDate;
-
     private Validator validator;
-
-    public SpotTest() {
-        try {
-            startDate = simpleDateTimeFormatter.parse("2017-10-12T10:15:10");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
     @BeforeEach
     public void setup() {
@@ -46,8 +34,8 @@ class SpotTest {
 
     @Test
     public void shouldBeSerializable() {
-        Spot spot = new Spot(registrationNumber, DriverType.REGULAR, startDate);
-        Spot other = (Spot) SerializationUtils.deserialize(SerializationUtils.serialize(spot));
+        final Spot spot = new Spot("WZE12345", DriverType.REGULAR, new Date());
+        final Spot other = (Spot) SerializationUtils.deserialize(SerializationUtils.serialize(spot));
 
         Objects.requireNonNull(other);
         assertThat(other.getVehiclePlate()).isEqualTo(spot.getVehiclePlate());
@@ -57,17 +45,18 @@ class SpotTest {
 
     @Test
     public void shouldAcceptCorrectParameters() {
-        Spot spot = new Spot(registrationNumber, DriverType.REGULAR, startDate);
+        final Date date = new Date();
+        final Spot spot = createSimpleSpot("WZE12345", date);
 
-        assertThat(spot.getVehiclePlate()).isEqualTo(registrationNumber);
+        assertThat(spot.getVehiclePlate()).isEqualTo("WZE12345");
         assertThat(spot.getDriverType()).isEqualTo(DriverType.REGULAR);
         assertThat(spot.getDriverType()).isNotEqualTo(DriverType.VIP);
-        assertThat(spot.getBeginDate()).isEqualTo(startDate);
+        assertThat(spot.getBeginDate()).isEqualTo(date);
     }
 
     @Test
     public void shouldNotReturnErrorsForSpot() {
-        Spot spot = new Spot(registrationNumber, DriverType.REGULAR, startDate);
+        final Spot spot = createSimpleSpot();
 
         Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
         assertTrue(violations.isEmpty());
@@ -75,25 +64,20 @@ class SpotTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"e12345",
-            "",
-            " ",
-            "     ",
-            "12345",
-            "qeee12345",
-            "registrationNo",
-            "qwe123456",
-            "qwe123",
-            "E12345",
-            "12345",
-            "QEEE12345",
-            "registrationNo",
-            "QWE123456",
-            "QWE123"})
+    @ValueSource(strings = {"e12345", "", " ", "     ", "12345", "qeee12345", "registrationNo", "qwe123456",
+            "qwe123", "E12345", "12345", "QEEE12345", "registrationNo", "QWE123456", "QWE123"})
     void shouldReturnViolationBecauseOfIncorrectRegistrationNumber(String number) {
-        Spot spot = new Spot(number, DriverType.REGULAR, startDate);
+        final Spot spot = new Spot(number, DriverType.REGULAR, new Date());
 
         Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
         assertTrue(violations.size() <= 2, "Failure no:" + violations.size());
+    }
+
+    private Spot createSimpleSpot() {
+        return new Spot("WZE12345", DriverType.REGULAR, new Date());
+    }
+
+    private Spot createSimpleSpot(String registrationNumber, Date startDate) {
+        return new Spot(registrationNumber, DriverType.REGULAR, startDate);
     }
 }

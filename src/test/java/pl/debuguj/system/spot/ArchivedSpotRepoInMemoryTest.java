@@ -1,6 +1,5 @@
 package pl.debuguj.system.spot;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -37,28 +36,32 @@ class ArchivedSpotRepoInMemoryTest {
 
     @Test
     public void shouldFindAllByDate() throws Exception {
-        final SimpleDateFormat dayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        List<ArchivedSpot> loadings = createArchivesSpotList();
+        List<ArchivedSpot> loadings = createArchiveSpotsList();
         loadings.forEach(sut::save);
 
-        Date date = dayDateFormat.parse("2020-10-14");
+        Date date = createDateByGivenString("2020-10-14");
         List<ArchivedSpot> spotStream = sut.getAllByDay(date);
 
         assertEquals(2, spotStream.size());
 
-        date = dayDateFormat.parse("2020-10-13");
+        date = createDateByGivenString("2020-10-13");
         spotStream = sut.getAllByDay(date);
 
         assertEquals(3, spotStream.size());
 
-        date = dayDateFormat.parse("2020-10-1");
+        date = createDateByGivenString("2020-10-1");
         spotStream = sut.getAllByDay(date);
 
         assertEquals(0, spotStream.size());
     }
 
-    private List<ArchivedSpot> createArchivesSpotList() throws Exception {
+    private Date createDateByGivenString(String stringDate) throws ParseException {
+        final SimpleDateFormat dayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dayDateFormat.parse(stringDate);
+    }
+
+    private List<ArchivedSpot> createArchiveSpotsList() throws Exception {
         Date[] startTimestamps = createStartTimestamps();
         Date[] stopTimestamps = createStopTimestamps();
 
