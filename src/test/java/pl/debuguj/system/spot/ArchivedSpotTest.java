@@ -93,9 +93,7 @@ class ArchivedSpotTest {
 
         ArchivedSpot archivedSpot = new ArchivedSpot("WZE12345", DriverType.REGULAR, startStopTimestamps[0], startStopTimestamps[1]);
 
-        archivedSpot.getFee(currencyRate).ifPresent(f -> {
-            assertEquals(feeValue, f);
-        });
+        archivedSpot.getFee(currencyRate).ifPresent(f -> assertEquals(feeValue, f));
 
     }
 
@@ -114,9 +112,7 @@ class ArchivedSpotTest {
 
         ArchivedSpot archivedSpot = new ArchivedSpot("WZE12345", DriverType.VIP, startStopTimestamps[0], startStopTimestamps[1]);
 
-        archivedSpot.getFee(currencyRate).ifPresent(f -> {
-            assertEquals(feeValue, fee);
-        });
+        archivedSpot.getFee(currencyRate).ifPresent(f -> assertEquals(feeValue, f));
     }
 
     private Date[] createStartStopTimestamps() {
