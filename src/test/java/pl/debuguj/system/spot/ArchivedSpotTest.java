@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.util.SerializationUtils;
+import pl.debuguj.system.external.CurrencyRate;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ArchivedSpotTest {
 
-    private CurrencyRate currencyRate = new CurrencyRate(new BigDecimal(1.0), Currency.getInstance(new Locale("pl", "PL")));
+    private CurrencyRate currencyRate = CurrencyRate.PLN;
     private Validator validator;
 
     @BeforeEach
@@ -37,6 +38,7 @@ class ArchivedSpotTest {
         final ArchivedSpot archivedSpot = new ArchivedSpot("WZE12345", DriverType.REGULAR, startStopTimestamps[0], startStopTimestamps[1]);
         ArchivedSpot other = (ArchivedSpot) SerializationUtils.deserialize(SerializationUtils.serialize(archivedSpot));
 
+        Objects.requireNonNull(other);
         assertThat(other.getUuid()).isEqualTo(archivedSpot.getUuid());
         assertThat(other.getVehiclePlate()).isEqualTo(archivedSpot.getVehiclePlate());
         assertThat(other.getDriverType()).isEqualTo(archivedSpot.getDriverType());
@@ -91,7 +93,10 @@ class ArchivedSpotTest {
 
         ArchivedSpot archivedSpot = new ArchivedSpot("WZE12345", DriverType.REGULAR, startStopTimestamps[0], startStopTimestamps[1]);
 
-        assertEquals(feeValue, archivedSpot.getFee(currencyRate).get());
+        archivedSpot.getFee(currencyRate).ifPresent(f -> {
+            assertEquals(feeValue, f);
+        });
+
     }
 
     @ParameterizedTest
@@ -109,7 +114,9 @@ class ArchivedSpotTest {
 
         ArchivedSpot archivedSpot = new ArchivedSpot("WZE12345", DriverType.VIP, startStopTimestamps[0], startStopTimestamps[1]);
 
-        assertEquals(feeValue, archivedSpot.getFee(currencyRate).get());
+        archivedSpot.getFee(currencyRate).ifPresent(f -> {
+            assertEquals(feeValue, fee);
+        });
     }
 
     private Date[] createStartStopTimestamps() {
