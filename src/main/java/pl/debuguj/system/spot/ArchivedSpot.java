@@ -2,6 +2,7 @@ package pl.debuguj.system.spot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import pl.debuguj.system.external.CurrencyRate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -48,7 +49,7 @@ public class ArchivedSpot implements Serializable {
     public Optional<BigDecimal> getFee() {
         if (Objects.nonNull(getFinishDate()) && checkFinishDate()) {
             final BigDecimal fee = getBasicFee();
-            final BigDecimal rate = new CurrencyRate(new BigDecimal(1.0), Currency.getInstance(Locale.getDefault())).getRate();
+            final BigDecimal rate = CurrencyRate.PLN.getRate();
 
             return Optional.ofNullable(fee.multiply(rate).setScale(1, BigDecimal.ROUND_CEILING));
         } else {

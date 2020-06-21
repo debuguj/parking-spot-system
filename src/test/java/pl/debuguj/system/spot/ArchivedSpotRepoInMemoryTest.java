@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 class ArchivedSpotRepoInMemoryTest {
 
-    private final ArchivedSpotRepoInMemory sut = new ArchivedSpotRepoInMemory();
+    private final ArchivedSpotRepo sut = new ArchivedSpotRepoInMemory();
 
     @Test
     public void shouldReturnEmptyOptional() {
@@ -22,6 +22,7 @@ class ArchivedSpotRepoInMemoryTest {
     @Test
     public void shouldSaveNewArchivedSpot() {
         final ArchivedSpot archivedSpot = createSimpleArchivedSpot();
+
         Optional<ArchivedSpot> returned = sut.save(archivedSpot);
 
         assertTrue(returned.isPresent());
@@ -41,17 +42,17 @@ class ArchivedSpotRepoInMemoryTest {
         List<ArchivedSpot> loadings = createArchivesSpotList();
         loadings.forEach(sut::save);
 
-        Date date = dayDateFormat.parse("2017-10-14");
+        Date date = dayDateFormat.parse("2020-10-14");
         List<ArchivedSpot> spotStream = sut.getAllByDay(date);
 
         assertEquals(2, spotStream.size());
 
-        date = dayDateFormat.parse("2017-10-13");
+        date = dayDateFormat.parse("2020-10-13");
         spotStream = sut.getAllByDay(date);
 
         assertEquals(3, spotStream.size());
 
-        date = dayDateFormat.parse("2017-10-1");
+        date = dayDateFormat.parse("2020-10-1");
         spotStream = sut.getAllByDay(date);
 
         assertEquals(0, spotStream.size());
@@ -75,11 +76,11 @@ class ArchivedSpotRepoInMemoryTest {
         final SimpleDateFormat timeDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
         return new Date[]{
-                timeDateFormat.parse("2017-10-13T13:35:12"),
-                timeDateFormat.parse("2017-10-13T17:35:12"),
-                timeDateFormat.parse("2017-10-13T16:35:12"),
-                timeDateFormat.parse("2017-10-14T21:35:12"),
-                timeDateFormat.parse("2017-10-14T12:35:12")
+                timeDateFormat.parse("2020-10-13T13:35:12"),
+                timeDateFormat.parse("2020-10-13T17:35:12"),
+                timeDateFormat.parse("2020-10-13T16:35:12"),
+                timeDateFormat.parse("2020-10-14T21:35:12"),
+                timeDateFormat.parse("2020-10-14T12:35:12")
         };
     }
 
@@ -87,11 +88,11 @@ class ArchivedSpotRepoInMemoryTest {
         final SimpleDateFormat timeDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
         return new Date[]{
-                timeDateFormat.parse("2017-10-13T10:25:48"),
-                timeDateFormat.parse("2017-10-13T12:25:48"),
-                timeDateFormat.parse("2017-10-13T15:25:48"),
-                timeDateFormat.parse("2017-10-14T20:25:48"),
-                timeDateFormat.parse("2017-10-14T11:15:48"),
+                timeDateFormat.parse("2020-10-13T10:25:48"),
+                timeDateFormat.parse("2020-10-13T12:25:48"),
+                timeDateFormat.parse("2020-10-13T15:25:48"),
+                timeDateFormat.parse("2020-10-14T20:25:48"),
+                timeDateFormat.parse("2020-10-14T11:15:48"),
         };
     }
 
