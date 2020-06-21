@@ -2,6 +2,7 @@ package pl.debuguj.system.spot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.external.CurrencyRate;
 
 import java.io.Serializable;
@@ -23,9 +24,9 @@ public class ArchivedSpot implements Serializable {
     private final Date beginDate;
     private final Date finishDate;
 
-    public ArchivedSpot(final Spot spot, final Date finishDate) throws DateTimeException {
+    public ArchivedSpot(final Spot spot, final Date finishDate) throws IncorrectFinishDateException {
         if (spot.getBeginDate().after(finishDate)) {
-            throw new DateTimeException("Finish time is before start time");
+            throw new IncorrectFinishDateException(spot.getBeginDate(), finishDate);
         }
         this.vehiclePlate = spot.getVehiclePlate();
         this.driverType = spot.getDriverType();

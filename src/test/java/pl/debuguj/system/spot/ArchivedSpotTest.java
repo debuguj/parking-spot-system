@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.util.SerializationUtils;
+import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.external.CurrencyRate;
 
 import javax.validation.Validation;
@@ -70,10 +71,10 @@ class ArchivedSpotTest {
         final Date[] incorrectStartStopTimestamps = createIncorrectStartStopTimeStamps();
         final Spot spot = new Spot("WZE12345", DriverType.REGULAR, incorrectStartStopTimestamps[0]);
 
-        Exception exception = assertThrows(DateTimeException.class, () ->
+        Exception exception = assertThrows(IncorrectFinishDateException.class, () ->
                 new ArchivedSpot(spot, incorrectStartStopTimestamps[1]));
 
-        assertEquals("Finish time is before start time", exception.getMessage());
+        assertThat(exception.getMessage().contains("Finish date:"));
     }
 
     @ParameterizedTest

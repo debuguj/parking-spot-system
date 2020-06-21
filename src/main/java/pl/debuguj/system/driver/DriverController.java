@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.exceptions.VehicleActiveInDbException;
 import pl.debuguj.system.exceptions.VehicleCannotBeRegisteredInDbException;
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException;
@@ -54,7 +55,6 @@ class DriverController {
         final ArchivedSpot archivedSpot = new ArchivedSpot(spot, finishDate);
         archivedSpotRepo.save(archivedSpot);
         spotRepo.delete(plate);
-
         return new ResponseEntity<>(new Fee(archivedSpot), HttpStatus.OK);
     }
 
