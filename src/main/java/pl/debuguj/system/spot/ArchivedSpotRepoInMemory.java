@@ -1,12 +1,17 @@
 package pl.debuguj.system.spot;
 
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Repository
 public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
+
+
     private static Map<UUID, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
@@ -30,9 +35,5 @@ public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
     private Date createEndDate(final Date d) {
         final LocalDateTime endDateTime = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         return Date.from(endDateTime.plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    public void clearRepo() {
-        mapParkingSpots.clear();
     }
 }

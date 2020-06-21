@@ -2,6 +2,11 @@ package pl.debuguj.system.spot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.util.SerializationUtils;
 
 import javax.validation.ConstraintViolation;
@@ -15,7 +20,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpotTest {
@@ -52,7 +56,7 @@ class SpotTest {
     }
 
     @Test
-    public void shouldBeSetCorrectParameters() {
+    public void shouldAcceptCorrectParameters() {
         Spot spot = new Spot(registrationNumber, DriverType.REGULAR, startDate);
 
         assertThat(spot.getVehiclePlate()).isEqualTo(registrationNumber);
@@ -63,62 +67,33 @@ class SpotTest {
 
     @Test
     public void shouldNotReturnErrorsForSpot() {
-        Spot spot1 = new Spot(registrationNumber, DriverType.REGULAR, startDate);
+        Spot spot = new Spot(registrationNumber, DriverType.REGULAR, startDate);
 
-        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot1);
+        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
         assertTrue(violations.isEmpty());
-
-        Spot spot2 = new Spot(registrationNumber, DriverType.REGULAR, startDate);
-
-        Set<ConstraintViolation<Spot>> violations2 = this.validator.validate(spot2);
-        assertTrue(violations2.isEmpty());
     }
 
-    @Test
-    public void shouldReturnOneViolationBecauseOfRegistrationPlateAsNullParameter() {
-        Spot spot = new Spot(null, DriverType.REGULAR, startDate);
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"e12345",
+            "",
+            " ",
+            "     ",
+            "12345",
+            "qeee12345",
+            "registrationNo",
+            "qwe123456",
+            "qwe123",
+            "E12345",
+            "12345",
+            "QEEE12345",
+            "registrationNo",
+            "QWE123456",
+            "QWE123"})
+    void shouldReturnViolationBecauseOfIncorrectRegistrationNumber(String number) {
+        Spot spot = new Spot(number, DriverType.REGULAR, startDate);
 
         Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-        assertTrue(violations.size() > 0);
-    }
-
-    @Test
-    void shouldReturnOneViolationBecauseOfDriverTypeAsNull() {
-        Spot spot = new Spot(registrationNumber, null, startDate);
-
-        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-        assertTrue(violations.size() > 0);
-    }
-
-    @Test
-    void shouldReturnOneViolationBecauseOfStartDateAsNull() {
-        Spot spot = new Spot(registrationNumber, DriverType.REGULAR, null);
-
-        Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-        assertTrue(violations.size() > 0);
-    }
-
-    @Test
-    void shouldReturnViolationBecauseOfIncorrectRegistrationNumber() {
-        String[] registrationNumbers = {
-                "e12345",
-                "12345",
-                "qeee12345",
-                "registrationNo",
-                "qwe123456",
-                "qwe123",
-                "E12345",
-                "12345",
-                "QEEE12345",
-                "registrationNo",
-                "QWE123456",
-                "QWE123"};
-
-        for (String number : registrationNumbers) {
-            Spot spot = new Spot(number, DriverType.REGULAR, startDate);
-
-            Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);
-            assertEquals(violations.size(), 1);
-        }
+        assertTrue(violations.size() <= 2, "Failure no:" + violations.size());
     }
 }

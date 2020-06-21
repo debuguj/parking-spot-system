@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface SpotRepo {
 
-    Optional<Spot> save(final Spot parkingSpaceActive);
+    Optional<Spot> save(final Spot spot);
 
-    Optional<Spot> findByVehiclePlate(final String vehiclePlate);
+    Optional<Spot> findVehicleByPlate(final String vehiclePlate);
 
     Optional<Spot> delete(final String plate);
 }

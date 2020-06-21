@@ -2,16 +2,15 @@ package pl.debuguj.system.spot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import pl.debuguj.system.external.CurrencyRate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Getter
@@ -24,7 +23,10 @@ public class ArchivedSpot implements Serializable {
     private final Date beginDate;
     private final Date finishDate;
 
-    public ArchivedSpot(final Spot spot, Date finishDate) {
+    public ArchivedSpot(final Spot spot, final Date finishDate) throws DateTimeException {
+        if (spot.getBeginDate().after(finishDate)) {
+            throw new DateTimeException("Finish date is to late");
+        }
         this.vehiclePlate = spot.getVehiclePlate();
         this.driverType = spot.getDriverType();
         this.beginDate = spot.getBeginDate();
@@ -46,8 +48,10 @@ public class ArchivedSpot implements Serializable {
 
     public Optional<BigDecimal> getFee() {
         if (Objects.nonNull(getFinishDate()) && checkFinishDate()) {
-            BigDecimal fee = getBasicFee();
-            return Optional.ofNullable(fee.multiply(Currency.PLN.getExchangeRate()).setScale(1, BigDecimal.ROUND_CEILING));
+            final BigDecimal fee = getBasicFee();
+            final BigDecimal rate = CurrencyRate.PLN.getRate();
+
+            return Optional.ofNullable(fee.multiply(rate).setScale(1, BigDecimal.ROUND_CEILING));
         } else {
             return Optional.empty();
         }
@@ -57,10 +61,10 @@ public class ArchivedSpot implements Serializable {
         return getFinishDate().after(getBeginDate());
     }
 
-    public Optional<BigDecimal> getFee(final Currency currency) {
+    public Optional<BigDecimal> getFee(final CurrencyRate cr) {
         if (Objects.nonNull(getFinishDate())) {
             BigDecimal fee = getBasicFee();
-            return Optional.ofNullable(fee.multiply(currency.getExchangeRate()).setScale(1, BigDecimal.ROUND_CEILING));
+            return Optional.ofNullable(fee.multiply(cr.getRate()).setScale(1, BigDecimal.ROUND_CEILING));
         } else {
             return Optional.empty();
         }

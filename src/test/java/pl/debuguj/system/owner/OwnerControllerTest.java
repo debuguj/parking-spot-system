@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.debuguj.system.external.CurrencyRateHandler;
 import pl.debuguj.system.spot.ArchivedSpot;
 import pl.debuguj.system.spot.ArchivedSpotRepo;
 import pl.debuguj.system.spot.DriverType;
@@ -46,28 +47,31 @@ public class OwnerControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private ArchivedSpotRepo archivedSpotRepo;
-    
-    private final Spot spot = new Spot("WCC12345", DriverType.REGULAR, new Date());
+    @MockBean
+    private CurrencyRateHandler currencyRateHandler;
 
     @Test
     @DisplayName("Should return NotFoundException because any vehicle was registered")
     public void shouldReturnNotFoundExceptionBecauseOfEmptyDatabase() throws Exception {
-        //final DailyIncome income = new DailyIncome(spot.getBeginDate(),new BigDecimal(3.0));
+        final Spot spot = createSimpleSpot();
         //WHEN
         mockMvc.perform(get(uriCheckDailyIncome, createDayFromBeginDateInString(spot.getBeginDate()))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                //.andExpect(content().json(objectMapper.writeValueAsString(income)))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();
+    }
+
+    private Spot createSimpleSpot() {
+        return new Spot("WCC12345", DriverType.REGULAR, new Date());
     }
 
     @Test
     @DisplayName("Should return income for one vehicle")
     public void shouldReturnIncomeForOneVehicle() throws Exception {
-
+        final Spot spot = createSimpleSpot();
         final Date finishDate = createFinishTimeStartTimePlus2Hours(spot.getBeginDate());
         final ArchivedSpot archivedSpot = new ArchivedSpot(spot, finishDate);
 
@@ -77,10 +81,10 @@ public class OwnerControllerTest {
         when(archivedSpotRepo.getAllByDay(any())).thenReturn(new ArrayList<>(Collections.singletonList(archivedSpot)));
 
         mockMvc.perform(get(uriCheckDailyIncome, createDayFromBeginDateInString(spot.getBeginDate()))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(income)))
                 .andDo(print())
                 .andReturn();

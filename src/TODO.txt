@@ -1,10 +1,10 @@
 BASIC
+- add component for currency rate 
 - transaction
 - add 2 profile: with h2 database, without database
 - add security
 - add hateoas
-- figure out how to avoid constant patterns for date and time
 
 ADDITIONAL
-- add some feature (activemq or rabbitmq)
+- add some feature (active_mq or rabbit_mq)
 - tests in spock
