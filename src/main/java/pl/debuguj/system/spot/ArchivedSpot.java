@@ -25,7 +25,7 @@ public class ArchivedSpot implements Serializable {
 
     public ArchivedSpot(final Spot spot, final Date finishDate) throws DateTimeException {
         if (spot.getBeginDate().after(finishDate)) {
-            throw new DateTimeException("Finish date is to late");
+            throw new DateTimeException("Finish time is before start time");
         }
         this.vehiclePlate = spot.getVehiclePlate();
         this.driverType = spot.getDriverType();
@@ -79,7 +79,7 @@ public class ArchivedSpot implements Serializable {
 
         if (compResult == 0) {
             return startSum;
-        } else if (compResult == 1) {
+        } else if (compResult > 0) {
             BigDecimal current = new BigDecimal("2.0");
 
             for (int i = 1; i < period.intValueExact(); i++) {

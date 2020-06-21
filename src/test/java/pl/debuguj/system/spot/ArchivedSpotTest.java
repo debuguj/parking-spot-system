@@ -68,12 +68,12 @@ class ArchivedSpotTest {
     @Test
     public void shouldThrowExceptionBecauseFinishDateIsBeforeStartDate() {
         final Date[] incorrectStartStopTimestamps = createIncorrectStartStopTimeStamps();
-
         final Spot spot = new Spot("WZE12345", DriverType.REGULAR, incorrectStartStopTimestamps[0]);
+
         Exception exception = assertThrows(DateTimeException.class, () ->
                 new ArchivedSpot(spot, incorrectStartStopTimestamps[1]));
 
-        assertEquals("Finish date is to late", exception.getMessage());
+        assertEquals("Finish time is before start time", exception.getMessage());
     }
 
     @ParameterizedTest
