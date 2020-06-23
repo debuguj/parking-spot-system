@@ -2,6 +2,7 @@ package pl.debuguj.system.spot;
 
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -24,16 +25,16 @@ public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
     }
 
     @Override
-    public List<ArchivedSpot> getAllByDay(final Date date) {
-        final Date end = createEndDate(date);
+    public List<ArchivedSpot> getAllByDay(final LocalDate date) {
+
         return mapParkingSpots.values()
                 .stream()
-                .filter(ps -> date.before(ps.getBeginDate()) && end.after(ps.getBeginDate()))
+                .filter(ps -> date.atStartOfDay().isBefore(ps.getBeginLocalDateTime()) && date.plusDays(1L).atStartOfDay().isAfter(ps.getBeginLocalDateTime()))
                 .collect(Collectors.toList());
     }
 
-    private Date createEndDate(final Date d) {
-        final LocalDateTime endDateTime = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        return Date.from(endDateTime.plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
-    }
+//    private Date createEndDate(final Date d) {
+//        final LocalDateTime endDateTime = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+//        return Date.from(endDateTime.plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
+//    }
 }

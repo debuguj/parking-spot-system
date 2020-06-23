@@ -2,6 +2,7 @@ package pl.debuguj.system.owner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,12 +55,15 @@ public class OwnerControllerTest {
     @MockBean
     private CurrencyRateHandler currencyRateHandler;
 
+    private static final LocalDateTime defaultDateTime = LocalDateTime.now();
+    private static final String defaultRegistrationNumber = "WZE12345";
+
     @Test
     @DisplayName("Should return NotFoundException because any vehicle was registered")
     public void shouldReturnNotFoundExceptionBecauseOfEmptyDatabase() throws Exception {
-        final Spot spot = createSimpleSpot();
+        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
         //WHEN
-        mockMvc.perform(get(uriCheckDailyIncome, createDayFromBeginDateInString(spot.getBeginDate()))
+        mockMvc.perform(get(uriCheckDailyIncome, spot.getBeginDatetime().format(DateTimeFormatter.ofPattern(datePattern)))
                 .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isNotFound())
@@ -65,24 +72,19 @@ public class OwnerControllerTest {
                 .andReturn();
     }
 
-    private Spot createSimpleSpot() {
-        return new Spot("WCC12345", DriverType.REGULAR, new Date());
-    }
-
     @Test
     @DisplayName("Should return income for one vehicle")
     public void shouldReturnIncomeForOneVehicle() throws Exception {
-        final Spot spot = createSimpleSpot();
-        final Date finishDate = createFinishTimeStartTimePlus2Hours(spot.getBeginDate());
-        final ArchivedSpot archivedSpot = new ArchivedSpot(spot, finishDate);
+        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
+        final ArchivedSpot archivedSpot = new ArchivedSpot(spot, spot.getBeginDatetime().plusHours(2L));
 
-        final Date day = createDayFromBeginDate(spot.getBeginDate());
+        final LocalDate day = spot.getBeginDatetime().toLocalDate();
         final DailyIncome income = new DailyIncome(day, new BigDecimal("3.0"));
         //WHEN
         when(archivedSpotRepo.getAllByDay(any())).thenReturn(new ArrayList<>(Collections.singletonList(archivedSpot)));
         when(currencyRateHandler.getCurrencyRate()).thenReturn(CurrencyRate.PLN);
 
-        mockMvc.perform(get(uriCheckDailyIncome, createDayFromBeginDateInString(spot.getBeginDate()))
+        mockMvc.perform(get(uriCheckDailyIncome, spot.getBeginDatetime().toLocalDate())
                 .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isOk())
@@ -92,22 +94,4 @@ public class OwnerControllerTest {
                 .andReturn();
     }
 
-    private String createDayFromBeginDateInString(final Date date) {
-        return new SimpleDateFormat(datePattern).format(date);
-    }
-
-    private Date createDayFromBeginDate(final Date date) {
-        final String stringDate = new SimpleDateFormat(datePattern).format(date);
-        Date formattedDate = null;
-        try {
-            formattedDate = new SimpleDateFormat(datePattern).parse(stringDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return formattedDate;
-    }
-
-    private Date createFinishTimeStartTimePlus2Hours(final Date date) {
-        return Date.from(date.toInstant().plus(Duration.ofHours(2)));
-    }
 }

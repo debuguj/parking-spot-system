@@ -16,6 +16,7 @@ import pl.debuguj.system.spot.DriverType;
 import pl.debuguj.system.spot.Spot;
 import pl.debuguj.system.spot.SpotRepo;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class OperatorControllerTest {
     @MockBean
     private SpotRepo spotRepo;
 
-    private final Spot spot = new Spot("WCC12345", DriverType.REGULAR, new Date());
+    private final Spot spot = new Spot("WCC12345", DriverType.REGULAR, LocalDateTime.now());
 
     @Test
     @DisplayName("Should return VehicleNotFoundException because vehicle is not active")

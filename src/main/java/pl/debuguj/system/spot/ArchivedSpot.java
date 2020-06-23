@@ -7,7 +7,6 @@ import pl.debuguj.system.external.CurrencyRate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -21,17 +20,17 @@ public class ArchivedSpot implements Serializable {
 
     private final String vehiclePlate;
     private final DriverType driverType;
-    private final Date beginDate;
-    private final Date finishDate;
+    private final LocalDateTime beginLocalDateTime;
+    private final LocalDateTime endLocalDateTime;
 
-    public ArchivedSpot(final Spot spot, final Date finishDate) throws IncorrectFinishDateException {
-        if (spot.getBeginDate().after(finishDate)) {
-            throw new IncorrectFinishDateException(spot.getBeginDate(), finishDate);
+    public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
+        if (spot.getBeginDatetime().isAfter(endLocalDateTime)) {
+            throw new IncorrectFinishDateException(spot.getBeginDatetime(), endLocalDateTime);
         }
         this.vehiclePlate = spot.getVehiclePlate();
         this.driverType = spot.getDriverType();
-        this.beginDate = spot.getBeginDate();
-        this.finishDate = finishDate;
+        this.beginLocalDateTime = spot.getBeginDatetime();
+        this.endLocalDateTime = endLocalDateTime;
     }
 
     @Override
@@ -48,7 +47,7 @@ public class ArchivedSpot implements Serializable {
     }
 
     public Optional<BigDecimal> getFee() {
-        if (Objects.nonNull(getFinishDate()) && checkFinishDate()) {
+        if (Objects.nonNull(getEndLocalDateTime()) && checkFinishDate()) {
             final BigDecimal fee = getBasicFee();
             final BigDecimal rate = CurrencyRate.PLN.getRate();
 
@@ -59,11 +58,11 @@ public class ArchivedSpot implements Serializable {
     }
 
     private boolean checkFinishDate() {
-        return getFinishDate().after(getBeginDate());
+        return getEndLocalDateTime().isAfter(getBeginLocalDateTime());
     }
 
     public Optional<BigDecimal> getFee(final CurrencyRate cr) {
-        if (Objects.nonNull(getFinishDate())) {
+        if (Objects.nonNull(getEndLocalDateTime())) {
             BigDecimal fee = getBasicFee();
             return Optional.ofNullable(fee.multiply(cr.getRate()).setScale(1, BigDecimal.ROUND_CEILING));
         } else {
@@ -99,10 +98,8 @@ public class ArchivedSpot implements Serializable {
      * @return Period of parking time in hours
      */
     private BigDecimal getPeriod() {
-        LocalDateTime from = getBeginDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        LocalDateTime to = getFinishDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-        BigDecimal minutes = new BigDecimal(from.until(to, ChronoUnit.MINUTES));
+        BigDecimal minutes = new BigDecimal(getBeginLocalDateTime().until(getEndLocalDateTime(), ChronoUnit.MINUTES));
         BigDecimal div = new BigDecimal(60);
 
         return minutes.divide(div, BigDecimal.ROUND_CEILING);

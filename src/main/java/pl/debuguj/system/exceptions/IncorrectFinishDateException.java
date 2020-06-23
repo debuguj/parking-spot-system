@@ -1,9 +1,9 @@
 package pl.debuguj.system.exceptions;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class IncorrectFinishDateException extends RuntimeException {
-    public IncorrectFinishDateException(final Date start, Date finish) {
-        super("Finish date: " + finish.toString() + " is before start date: " + finish.toString());
+    public IncorrectFinishDateException(final LocalDateTime start, LocalDateTime finish) {
+        super("Finish date: " + start.toString() + " is before start date: " + finish.toString());
     }
 }

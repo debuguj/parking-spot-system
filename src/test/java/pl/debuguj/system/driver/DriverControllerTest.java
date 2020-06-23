@@ -2,6 +2,7 @@ package pl.debuguj.system.driver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import pl.debuguj.system.spot.*;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 
@@ -48,11 +51,13 @@ public class DriverControllerTest {
     @MockBean
     private ArchivedSpotRepo archivedSpotRepo;
 
-    private final Spot spot = new Spot("WCC12345", DriverType.REGULAR, new Date());
+    private static final LocalDateTime defaultDateTime = LocalDateTime.now();
+    private static final String defaultRegistrationNumber = "WZE12345";
 
     @Test
     @DisplayName("Should return a correct payload after request")
     public void shouldReturnCorrectPayloadAndFormatAndValue() throws Exception {
+        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
         //WHEN
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.empty());
         when(spotRepo.save(spot)).thenReturn(Optional.of(spot));
@@ -71,6 +76,7 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return redirection because a vehicle is active")
     public void shouldReturnRedirectionBecauseOfVehicleIsActive() throws Exception {
+        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
         //WHEN
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate()))
                 .thenThrow(new VehicleActiveInDbException(spot.getVehiclePlate()));
@@ -88,6 +94,7 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return lock because a vehicle cannot be registered")
     public void shouldReturnLockedBecauseOfVehicleCannotBeRegistered() throws Exception {
+        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
         //WHEN
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.empty());
         when(spotRepo.save(spot)).thenThrow(new VehicleCannotBeRegisteredInDbException(spot.getVehiclePlate()));
@@ -105,11 +112,12 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return Not Found because vehicle is not active")
     public void shouldReturnNotFoundBecauseVehicleIsNotActive() throws Exception {
+        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
         //WHEN
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenThrow(new VehicleNotExistsInDbException(spot.getVehiclePlate()));
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
-                .param("finishDate", createTimeAfter2hInString(spot.getBeginDate()))
+                .param("finishDate", spot.getBeginDatetime().format(DateTimeFormatter.ofPattern(dateTimePattern)))
                 .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isNotFound())
@@ -121,13 +129,14 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return correct fee")
     public void shouldReturnCorrectFee() throws Exception {
+        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
 
-        final Fee fee = new Fee(new ArchivedSpot(spot, createTimeAfter2h(spot.getBeginDate())));
+        final Fee fee = new Fee(new ArchivedSpot(spot, spot.getBeginDatetime().plusHours(2L)));
         //WHEN
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
-                .param("finishDate", createTimeAfter2hInString(spot.getBeginDate()))
+                .param("finishDate", spot.getBeginDatetime().format(DateTimeFormatter.ofPattern(dateTimePattern)))
                 .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isOk())
@@ -135,14 +144,5 @@ public class DriverControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(fee)))
                 .andDo(print())
                 .andReturn();
-    }
-
-    private String createTimeAfter2hInString(final Date startDate) {
-        final Date newDate = Date.from(startDate.toInstant().plus(Duration.ofHours(2)));
-        return new SimpleDateFormat(dateTimePattern).format(newDate);
-    }
-
-    private Date createTimeAfter2h(final Date startDate) {
-        return Date.from(startDate.toInstant().plus(Duration.ofHours(2)));
     }
 }

@@ -1,8 +1,9 @@
 package pl.debuguj.system.spot;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -15,6 +16,15 @@ class SpotRepoInMemoryTest {
 
     private final SpotRepoInMemory sut = new SpotRepoInMemory();
 
+    private static final LocalDateTime defaultDateTime = LocalDateTime.now();
+    private static final String defaultRegistrationNo = "WZE12345";
+    private static Spot spot;
+
+    @BeforeAll
+    static void init() {
+        spot = new Spot(defaultRegistrationNo, DriverType.REGULAR, defaultDateTime);
+    }
+
     @Test
     public void shouldReturnEmptyOptional() {
         Optional<Spot> opt = sut.save(null);
@@ -23,46 +33,34 @@ class SpotRepoInMemoryTest {
 
     @Test
     public void shouldReturnEmptyOptionalBecauseVehicleIsActive() {
-        final Spot spot1 = createSimpleSpot("WZE12345");
-        sut.save(spot1);
-
-        Optional<Spot> opt = sut.save(spot1);
-
+        sut.save(spot);
+        Optional<Spot> opt = sut.save(spot);
         assertFalse(opt.isPresent());
     }
 
-
     @Test
     public void shouldReturnNotEmptyOptionalBecauseVehicleIsNotActive() {
-        final Spot spot = createSimpleSpot("WZE12345");
         Optional<Spot> opt = sut.save(spot);
-
         assertTrue(opt.isPresent());
     }
 
     @Test
     public void shouldDeleteActiveSpot() {
-        final Spot spot = createSimpleSpot("WZE12345");
         sut.save(spot);
-        Optional<Spot> found = sut.findVehicleByPlate("WZE12345");
-
+        Optional<Spot> found = sut.findVehicleByPlate(defaultRegistrationNo);
         assertTrue(found.isPresent());
 
         sut.delete(spot.getVehiclePlate());
-        Optional<Spot> notFound = sut.findVehicleByPlate("WZE12345");
+        Optional<Spot> notFound = sut.findVehicleByPlate(defaultRegistrationNo);
 
         assertFalse(notFound.isPresent());
     }
 
     @Test
     public void shouldNotFindActiveParkingSpace() {
-        Optional<Spot> notFound = sut.findVehicleByPlate("WZE12345");
+        Optional<Spot> notFound = sut.findVehicleByPlate(defaultRegistrationNo);
 
         assertNotNull(notFound);
         assertFalse(notFound.isPresent());
-    }
-
-    private Spot createSimpleSpot(String wze12345) {
-        return new Spot("WZE12345", DriverType.REGULAR, new Date());
     }
 }

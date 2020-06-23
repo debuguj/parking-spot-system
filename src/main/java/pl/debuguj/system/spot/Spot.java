@@ -7,6 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -23,8 +24,8 @@ public class Spot implements Serializable {
     @DriverTypeSubSet(anyOf = {DriverType.REGULAR, DriverType.VIP})
     private final DriverType driverType;
 
-    @NotNull(message = "Begin date must be provided.")
-    private final Date beginDate;
+    @NotNull(message = "Begin datetime must be provided.")
+    private final LocalDateTime beginDatetime;
 
     @Override
     public boolean equals(Object o) {

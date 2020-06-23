@@ -26,7 +26,7 @@ class SpotSpec extends Specification {
         def spot = createSimpleSpot("WZE12345", date)
         expect:
         spot.vehiclePlate == "WZE12345"
-        spot.beginDate == date
+        spot.beginDatetime == date
         spot.driverType == DriverType.REGULAR
     }
 
@@ -35,7 +35,7 @@ class SpotSpec extends Specification {
         def spot = createSimpleSpot()
         def other = (Spot) SerializationUtils.deserialize(SerializationUtils.serialize(spot))
         expect:
-        other.beginDate == spot.beginDate
+        other.beginDatetime == spot.beginDatetime
         other.driverType == spot.driverType
         other.vehiclePlate == spot.vehiclePlate
     }
@@ -50,7 +50,7 @@ class SpotSpec extends Specification {
     }
 
     @Unroll
-    def "Should return violations because of null parameters: #plate #driverType #beginDate "() {
+    def "Should return violations because of one null parameters: #plate #driverType #beginDate "() {
         given:
         def invalidSpot = createSimpleSpot(plate, driverType, beginDate)
         when:

@@ -18,6 +18,7 @@ import pl.debuguj.system.spot.SpotRepo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -47,7 +48,7 @@ class DriverController {
     @PatchMapping(value = "${uri.driver.stop}")
     public HttpEntity<Fee> stopParkingMeter(
             @Valid @PathVariable @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$") String plate,
-            @Valid @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") Date finishDate) {
+            @Valid @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") LocalDateTime finishDate) {
 
         final Spot spot = spotRepo.findVehicleByPlate(plate)
                 .orElseThrow(() -> new VehicleNotExistsInDbException(plate));
