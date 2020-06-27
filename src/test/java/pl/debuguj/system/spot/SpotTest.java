@@ -24,10 +24,10 @@ class SpotTest {
 
     private static final LocalDateTime defaultDateTime = LocalDateTime.now();
     private static final String defaultRegistrationNumber = "WZE12345";
-    private static Spot spot;
+    private Spot spot;
 
     @BeforeAll
-    static void init() {
+    void init() {
         spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
     }
 

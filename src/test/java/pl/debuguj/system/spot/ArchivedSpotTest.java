@@ -57,7 +57,8 @@ class ArchivedSpotTest {
 
     @Test
     public void shouldReturnEmptyOptionalBecauseOfNullFinishDate() {
-        final ArchivedSpot archivedSpot = new ArchivedSpot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime, null);
+        final ArchivedSpot archivedSpot
+                = new ArchivedSpot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime, null);
 
         assertEquals(Optional.empty(), archivedSpot.getFee());
     }
@@ -103,7 +104,7 @@ class ArchivedSpotTest {
     public void shouldReturnCorrectFeeForVipDriver(ArgumentsAccessor arguments) throws Exception {
         ArchivedSpot archivedSpot = new ArchivedSpot(
                 defRegistrationNumber,
-                DriverType.REGULAR,
+                DriverType.VIP,
                 arguments.get(0, LocalDateTime.class),
                 arguments.get(1, LocalDateTime.class));
 
