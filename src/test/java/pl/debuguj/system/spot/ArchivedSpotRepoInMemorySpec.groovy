@@ -29,6 +29,7 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
     def "Should return empty optional because of null archived spot value"() {
         when: "Save #archivedSpot to repository"
         Optional<ArchivedSpot> opt = sut.save(null)
+
         then: "Should return empty optional"
         !opt.isPresent()
     }
@@ -36,8 +37,10 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
     def "Should save new archived spot to repository"() {
         when: "Save #archivedSpot to repository"
         Optional<ArchivedSpot> opt = sut.save(archivedSpot)
+
         then: "Should return not empty optional"
         opt.isPresent()
+
         and: "Values should be correct"
         opt.ifPresent({ value ->
             archivedSpot.uuid == value.uuid
@@ -51,22 +54,30 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
         given: "A start date for tests"
         LocalDate startDate = LocalDate
                 .parse("2020-06-21", DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
         and: "Created test values"
         createArchiveSpotsList(startDate).forEach(sut.&save)
-        when: "Get values by date #basicDateString"
+
+        when: "Get values by date #startDate"
         List<ArchivedSpot> spotStream = sut.getAllByDay(startDate)
+
         then: "Found size of elements should be 2"
         spotStream.size() == 2
+
         when: "Check size one day after start date #startDate"
         spotStream = sut.getAllByDay(startDate.plusDays(1L))
-        then: "Number of found item should be 3"
+
+        then: "Number of found items should be 3"
         spotStream.size() == 3
-        when: "Check size of list 2 days after #startDay"
+
+        when: "Check size of list 2 days after #startDate"
         spotStream = sut.getAllByDay(startDate.plusDays(2L))
-        then: "Number of found item should be 3"
+
+        then: "Number of found item should be 0"
         spotStream.size() == 0
     }
 
+    //TODO: update to groovy version
     private static List<ArchivedSpot> createArchiveSpotsList(LocalDate date) {
         List<ArchivedSpot> list = new ArrayList<>()
 

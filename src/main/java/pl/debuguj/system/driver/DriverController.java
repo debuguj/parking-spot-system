@@ -32,6 +32,7 @@ class DriverController {
     private final SpotRepo spotRepo;
     private final ArchivedSpotRepo archivedSpotRepo;
 
+
     @PostMapping(value = "${uri.driver.start}")
     public HttpEntity<Spot> startParkingMeter(@RequestBody @Valid Spot spot) {
         spotRepo.findVehicleByPlate(spot.getVehiclePlate())
