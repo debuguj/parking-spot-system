@@ -23,7 +23,7 @@ class SpotRepoInMemorySpec extends Specification {
 
     def "Should return empty optional because of null spot value"() {
         when: "save #spot to repository"
-        Optional<Spot> opt = sut.save(null)
+            Optional<Spot> opt = sut.save(null)
         then: "should return empty optional"
         !opt.isPresent()
     }
