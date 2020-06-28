@@ -3,8 +3,6 @@ package pl.debuguj.system.spot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +15,7 @@ class ArchivedSpotRepoInMemoryTest {
     private final ArchivedSpotRepo sut = new ArchivedSpotRepoInMemory();
 
     private static final LocalDateTime defBeginDateTime = LocalDateTime.now();
-    private static final LocalDateTime defEndDate = LocalDateTime.now().plusHours(2L);
+    private static final LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L);
     private static final String defRegistrationNumber = "WZE12345";
     private static ArchivedSpot archivedSpot;
 
@@ -25,7 +23,7 @@ class ArchivedSpotRepoInMemoryTest {
 
     @BeforeAll
     static void init() {
-        archivedSpot = new ArchivedSpot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime, defEndDate);
+        archivedSpot = new ArchivedSpot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime, defEndDateTime);
     }
 
     @Test
@@ -55,6 +53,7 @@ class ArchivedSpotRepoInMemoryTest {
         loadings.forEach(sut::save);
 
         LocalDate date = LocalDate.parse(basicDateString);
+
         List<ArchivedSpot> spotStream = sut.getAllByDay(date);
         assertEquals(2, spotStream.size());
 
@@ -69,10 +68,10 @@ class ArchivedSpotRepoInMemoryTest {
     }
 
     private List<ArchivedSpot> createArchiveSpotsList() {
-
         List<ArchivedSpot> list = new ArrayList<>();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime ldt = LocalDate.parse(basicDateString, dtf).atStartOfDay();
+
         list.add(new ArchivedSpot("WWW66666", DriverType.REGULAR, ldt, ldt.plusHours(2L)));
         list.add(new ArchivedSpot("WSQ77777", DriverType.REGULAR, ldt, ldt.plusHours(3L)));
         list.add(new ArchivedSpot("QAZ88888", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusDays(1L).plusHours(4L)));

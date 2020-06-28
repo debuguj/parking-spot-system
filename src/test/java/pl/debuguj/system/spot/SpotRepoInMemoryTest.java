@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 class SpotRepoInMemoryTest {
 
-    private final SpotRepoInMemory sut = new SpotRepoInMemory();
+    private final SpotRepo sut = new SpotRepoInMemory();
 
     private static final LocalDateTime defaultDateTime = LocalDateTime.now();
     private static final String defaultRegistrationNo = "WZE12345";
