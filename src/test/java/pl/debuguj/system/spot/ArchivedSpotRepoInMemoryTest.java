@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -49,7 +50,7 @@ class ArchivedSpotRepoInMemoryTest {
     }
 
     @Test
-    public void shouldFindAllByDate() throws Exception {
+    public void shouldFindAllByDate() {
         List<ArchivedSpot> loadings = createArchiveSpotsList();
         loadings.forEach(sut::save);
 
@@ -67,15 +68,16 @@ class ArchivedSpotRepoInMemoryTest {
         assertEquals(0, spotStream.size());
     }
 
-    private List<ArchivedSpot> createArchiveSpotsList() throws Exception {
+    private List<ArchivedSpot> createArchiveSpotsList() {
 
         List<ArchivedSpot> list = new ArrayList<>();
-        LocalDateTime ldt = LocalDateTime.parse(basicDateString);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime ldt = LocalDate.parse(basicDateString, dtf).atStartOfDay();
         list.add(new ArchivedSpot("WWW66666", DriverType.REGULAR, ldt, ldt.plusHours(2L)));
         list.add(new ArchivedSpot("WSQ77777", DriverType.REGULAR, ldt, ldt.plusHours(3L)));
-        list.add(new ArchivedSpot("QAZ88888", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusHours(4L)));
-        list.add(new ArchivedSpot("EDC99999", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusHours(2L)));
-        list.add(new ArchivedSpot("FDR99998", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusHours(1L)));
+        list.add(new ArchivedSpot("QAZ88888", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusDays(1L).plusHours(4L)));
+        list.add(new ArchivedSpot("EDC99999", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusDays(1L).plusHours(2L)));
+        list.add(new ArchivedSpot("FDR99998", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusDays(1L).plusHours(1L)));
 
         return list;
     }

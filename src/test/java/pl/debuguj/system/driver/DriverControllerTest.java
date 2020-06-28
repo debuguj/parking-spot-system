@@ -136,7 +136,7 @@ public class DriverControllerTest {
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
-                .param("finishDate", spot.getBeginDatetime().format(DateTimeFormatter.ofPattern(dateTimePattern)))
+                .param("finishDate", spot.getBeginDatetime().plusHours(2L).format(DateTimeFormatter.ofPattern(dateTimePattern)))
                 .contentType(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(status().isOk())

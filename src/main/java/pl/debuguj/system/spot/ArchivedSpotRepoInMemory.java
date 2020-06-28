@@ -26,15 +26,19 @@ public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
 
     @Override
     public List<ArchivedSpot> getAllByDay(final LocalDate date) {
-
         return mapParkingSpots.values()
                 .stream()
-                .filter(ps -> date.atStartOfDay().isBefore(ps.getBeginLocalDateTime()) && date.plusDays(1L).atStartOfDay().isAfter(ps.getBeginLocalDateTime()))
+                .filter(as -> checkItem(date, as))
                 .collect(Collectors.toList());
     }
 
-//    private Date createEndDate(final Date d) {
-//        final LocalDateTime endDateTime = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-//        return Date.from(endDateTime.plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
-//    }
+    boolean checkItem(LocalDate date, ArchivedSpot as) {
+        final LocalDateTime ldtBegin = date.atStartOfDay();
+        final LocalDateTime ldtEnd = ldtBegin.plusDays(1L);
+
+        return as.getBeginLocalDateTime().isAfter(ldtBegin)
+                && as.getBeginLocalDateTime().isBefore(ldtEnd)
+                || as.getBeginLocalDateTime().isEqual(ldtBegin);
+    }
+
 }

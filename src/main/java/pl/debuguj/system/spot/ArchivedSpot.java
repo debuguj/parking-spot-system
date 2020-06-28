@@ -8,9 +8,10 @@ import pl.debuguj.system.external.CurrencyRate;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
@@ -24,7 +25,7 @@ public class ArchivedSpot implements Serializable {
     private final LocalDateTime endLocalDateTime;
 
     public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
-        if (spot.getBeginDatetime().isAfter(endLocalDateTime)) {
+        if (endLocalDateTime.isBefore(spot.getBeginDatetime())) {
             throw new IncorrectFinishDateException(spot.getBeginDatetime(), endLocalDateTime);
         }
         this.vehiclePlate = spot.getVehiclePlate();

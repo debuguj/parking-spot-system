@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 class ArchivedSpotSpec extends Specification {
 
     @Subject
-    ArchivedSpot archivedSpot;
+    ArchivedSpot archivedSpot
 
     @Shared
     Validator validator
@@ -31,18 +31,18 @@ class ArchivedSpotSpec extends Specification {
     def setup() {
         defBeginDateTime = LocalDateTime.now()
         defEndDateTime = LocalDateTime.now().plusHours(2L)
-        defaultRegistrationNumber = "WZE12345";
+        defaultRegistrationNumber = "WZE12345"
         archivedSpot = new ArchivedSpot(defaultRegistrationNumber, DriverType.REGULAR, defBeginDateTime, defEndDateTime)
     }
 
     def setupSpec() {
-        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
-        this.validator = vf.getValidator();
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory()
+        this.validator = vf.getValidator()
     }
 
     def "Should be serialized correctly"() {
         given: "Serialization #archivedSpot to #other object"
-        final ArchivedSpot other = (ArchivedSpot) SerializationUtils.deserialize(SerializationUtils.serialize(archivedSpot));
+        final ArchivedSpot other = (ArchivedSpot) SerializationUtils.deserialize(SerializationUtils.serialize(archivedSpot))
         expect: 'Should return valid and correct values'
         other.uuid == archivedSpot.uuid
         other.vehiclePlate == archivedSpot.vehiclePlate
@@ -79,7 +79,7 @@ class ArchivedSpotSpec extends Specification {
     }
 
     @Unroll
-    def "Should return a correct #fee for REGULAR driver and given default currency rate"() {
+    def "Should return a correct #fee for REGULAR driver and given default currency rate PLN"() {
         given: "ArchivedSpot with valid input"
         ArchivedSpot invalidSpot = new ArchivedSpot(defaultRegistrationNumber, DriverType.REGULAR,
                 LocalDateTime.parse(beginDate), LocalDateTime.parse(endDate))
@@ -112,6 +112,5 @@ class ArchivedSpotSpec extends Specification {
         "2020-10-12T11:15:48" | "2020-10-12T16:35:12" || 26.4
         "2020-10-12T00:15:48" | "2020-10-12T15:35:12" || 1747.6
         "2020-10-12T11:15:48" | "2020-10-13T11:14:12" || 44887.0
-
     }
 }
