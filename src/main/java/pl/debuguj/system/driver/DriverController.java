@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.exceptions.VehicleActiveInDbException;
 import pl.debuguj.system.exceptions.VehicleCannotBeRegisteredInDbException;
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException;
@@ -17,6 +18,7 @@ import pl.debuguj.system.spot.SpotRepo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -29,6 +31,7 @@ class DriverController {
 
     private final SpotRepo spotRepo;
     private final ArchivedSpotRepo archivedSpotRepo;
+
 
     @PostMapping(value = "${uri.driver.start}")
     public HttpEntity<Spot> startParkingMeter(@RequestBody @Valid Spot spot) {
@@ -46,7 +49,7 @@ class DriverController {
     @PatchMapping(value = "${uri.driver.stop}")
     public HttpEntity<Fee> stopParkingMeter(
             @Valid @PathVariable @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$") String plate,
-            @Valid @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") Date finishDate) {
+            @Valid @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") LocalDateTime finishDate) {
 
         final Spot spot = spotRepo.findVehicleByPlate(plate)
                 .orElseThrow(() -> new VehicleNotExistsInDbException(plate));
@@ -54,7 +57,6 @@ class DriverController {
         final ArchivedSpot archivedSpot = new ArchivedSpot(spot, finishDate);
         archivedSpotRepo.save(archivedSpot);
         spotRepo.delete(plate);
-
         return new ResponseEntity<>(new Fee(archivedSpot), HttpStatus.OK);
     }
 

@@ -1,10 +1,12 @@
-BASIC
-- add component for currency rate 
+BASIC:
+- remove validation from archivedSpot, change it to dto
+- add docker with db
+- add jmeter tests
 - transaction
 - add 2 profile: with h2 database, without database
 - add security
 - add hateoas
+- hexagonale architecture
 
 ADDITIONAL
 - add some feature (active_mq or rabbit_mq)
-- tests in spock

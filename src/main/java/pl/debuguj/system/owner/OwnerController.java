@@ -16,6 +16,7 @@ import pl.debuguj.system.spot.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +35,7 @@ class OwnerController {
     private final CurrencyRateHandler currencyRateHandler;
 
     @GetMapping(value = "${uri.owner.income}")
-    public HttpEntity<DailyIncome> getIncomePerDay(@Valid @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+    public HttpEntity<DailyIncome> getIncomePerDay(@Valid @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
         List<ArchivedSpot> archivedSpotList = archivedSpotRepo.getAllByDay(date);
 
