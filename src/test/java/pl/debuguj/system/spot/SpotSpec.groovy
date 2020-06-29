@@ -19,11 +19,11 @@ class SpotSpec extends Specification {
     Spot spot
 
     @Shared
-            validator
+    def validator
     @Shared
     LocalDateTime defaultDateTime
     @Shared
-            defaultRegistrationNumber
+    def defaultRegistrationNumber
 
     def setup() {
         defaultDateTime = LocalDateTime.now()
