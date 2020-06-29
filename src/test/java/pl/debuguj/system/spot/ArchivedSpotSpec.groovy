@@ -72,17 +72,17 @@ class ArchivedSpotSpec extends Specification {
         Optional.empty() == invalidArchivedSpot.getFee(currencyRate)
     }
 
-    def "should throws an exception because finish date is before start date"() {
+    def "Should throw an exception because finish date is before start date"() {
         given: "An incorrect endTimestamp"
         LocalDateTime invalidEndTimestamp = defBeginDateTime.minusHours(2L)
 
         and: "A simple Spot for test"
         def spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defBeginDateTime)
 
-        when:
-        new ArchivedSpot(spot, invalidEndTimestamp)
+        when: "A new archivedSpot created"
+        def archivedSpot1 = new ArchivedSpot(spot, invalidEndTimestamp)
 
-        then:
+        then: "Should throw an exception"
         thrown(IncorrectFinishDateException)
     }
 
@@ -95,7 +95,7 @@ class ArchivedSpotSpec extends Specification {
         expect: "A correct value of fee"
         invalidSpot.getFee(currencyRate).ifPresent({ f -> new BigDecimal(fee) == f })
 
-        where: "Valid input is: "
+        where: "Valid #fee for period between #beginDate and #endDate is:"
         beginDate             | endDate               || fee
         "2020-06-12T11:15:48" | "2020-06-12T11:35:12" || 1.0
         "2020-06-12T11:15:48" | "2020-06-12T12:35:12" || 3.0

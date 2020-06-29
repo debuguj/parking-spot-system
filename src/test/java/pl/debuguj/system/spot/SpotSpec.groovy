@@ -73,7 +73,7 @@ class SpotSpec extends Specification {
         when: "Checking by validator"
         Set<ConstraintViolation<Spot>> violations = validator.validate(invalidSpot)
 
-        then: "Number of violation should be greater than 0"
+        then: "The number of violation should be greater than 0"
         violations.size() > 0
 
         where: "Invalid input is: "
