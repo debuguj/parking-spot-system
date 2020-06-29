@@ -16,11 +16,11 @@ class ArchivedSpotSpec extends Specification {
     @Shared
     @Subject
     ArchivedSpot archivedSpot
-
     @Shared
             validator
     @Shared
             currencyRate = CurrencyRate.PLN
+
     @Shared
     LocalDateTime defBeginDateTime
     @Shared
