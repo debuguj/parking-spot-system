@@ -43,7 +43,7 @@ class ArchivedSpotSpec extends Specification {
         given: "Serialization #archivedSpot to #other object"
         def other = (ArchivedSpot) SerializationUtils.deserialize(SerializationUtils.serialize(archivedSpot))
 
-        expect: 'Should return valid and correct values'
+        expect: "Should return valid and correct values"
         with(other) {
             uuid == archivedSpot.uuid
             vehiclePlate == archivedSpot.vehiclePlate
@@ -76,10 +76,10 @@ class ArchivedSpotSpec extends Specification {
         given: "An incorrect endTimestamp"
         LocalDateTime invalidEndTimestamp = defBeginDateTime.minusHours(2L)
 
-        and: "A simple Spot for test"
+        and: "Simple Spot for test"
         def spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defBeginDateTime)
 
-        when: "A new archivedSpot created"
+        when: "New archivedSpot created"
         def archivedSpot1 = new ArchivedSpot(spot, invalidEndTimestamp)
 
         then: "Should throw an exception"
@@ -115,7 +115,7 @@ class ArchivedSpotSpec extends Specification {
         expect: "A correct value of fee"
         invalidSpot.getFee(currencyRate).ifPresent({ f -> new BigDecimal(fee) == f })
 
-        where: "Valid input is: "
+        where: "Valid #fee between #beginDate and #endDate"
         beginDate             | endDate               || fee
         "2020-10-12T11:15:48" | "2020-10-12T11:35:12" || 0.0
         "2020-10-12T11:15:48" | "2020-10-12T12:35:12" || 2.0
