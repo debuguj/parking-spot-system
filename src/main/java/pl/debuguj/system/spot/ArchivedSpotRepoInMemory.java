@@ -1,6 +1,7 @@
 package pl.debuguj.system.spot;
 
 import org.springframework.stereotype.Repository;
+import pl.debuguj.system.driver.Fee;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,14 +13,13 @@ import java.util.stream.Collectors;
 @Repository
 public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
 
-
     private static Map<UUID, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
-    public Optional<ArchivedSpot> save(final ArchivedSpot archivedSpot) {
+    public Optional<Fee> save(final ArchivedSpot archivedSpot) {
         if (Objects.nonNull(archivedSpot)) {
             mapParkingSpots.put(archivedSpot.getUuid(), archivedSpot);
-            return Optional.of(archivedSpot);
+            return Optional.of(new Fee(archivedSpot));
         }
         return Optional.empty();
     }
@@ -32,7 +32,7 @@ public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
                 .collect(Collectors.toList());
     }
 
-    boolean checkItem(LocalDate date, ArchivedSpot as) {
+    private boolean checkItem(final LocalDate date, final ArchivedSpot as) {
         final LocalDateTime ldtBegin = date.atStartOfDay();
         final LocalDateTime ldtEnd = ldtBegin.plusDays(1L);
 

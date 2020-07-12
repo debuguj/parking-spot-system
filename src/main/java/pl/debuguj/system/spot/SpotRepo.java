@@ -5,7 +5,6 @@ import java.util.Optional;
 /**
  * Created by GB on 07.03.2020.
  */
-
 public interface SpotRepo {
 
     Optional<Spot> save(final Spot spot);

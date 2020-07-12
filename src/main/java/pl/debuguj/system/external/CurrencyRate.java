@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 @Getter
-public class CurrencyRate {
+public final class CurrencyRate {
 
     private final BigDecimal rate;
     private final Currency currency;

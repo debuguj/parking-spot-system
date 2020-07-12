@@ -31,6 +31,16 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(IncorrectFinishDateException.class)
+    public ResponseEntity<ErrorResponse> systemIncorrectFinishDate(Exception ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setError(ex.getMessage());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(VehicleActiveInDbException.class)
     public ResponseEntity<ErrorResponse> systemVehicleActive(Exception ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();

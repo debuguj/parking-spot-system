@@ -2,6 +2,7 @@ package pl.debuguj.system.spot;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pl.debuguj.system.driver.Fee;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,22 +29,21 @@ class ArchivedSpotRepoInMemoryTest {
 
     @Test
     public void shouldReturnEmptyOptional() {
-        Optional<ArchivedSpot> opt = sut.save(null);
+        Optional<Fee> opt = sut.save(null);
         assertFalse(opt.isPresent());
     }
 
     @Test
     public void shouldSaveNewArchivedSpot() {
 
-        Optional<ArchivedSpot> returned = sut.save(archivedSpot);
+        Optional<Fee> returned = sut.save(archivedSpot);
 
         assertTrue(returned.isPresent());
 
-        returned.ifPresent(as -> {
-            assertEquals(archivedSpot.getUuid(), as.getUuid());
-            assertEquals(archivedSpot.getBeginLocalDateTime(), as.getBeginLocalDateTime());
-            assertEquals(archivedSpot.getEndLocalDateTime(), as.getEndLocalDateTime());
-            assertEquals(archivedSpot.getDriverType(), as.getDriverType());
+        returned.ifPresent(fee -> {
+            assertEquals(archivedSpot.getVehiclePlate(), fee.getPlate());
+            assertEquals(archivedSpot.getBeginLocalDateTime(), fee.getStartTime());
+            assertEquals(archivedSpot.getEndLocalDateTime(), fee.getStopTime());
         });
     }
 
