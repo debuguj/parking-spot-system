@@ -22,10 +22,10 @@ class SpotRepoInMemorySpec extends Specification {
     }
 
     def "Should return empty optional because of null spot value"() {
-        when: "save #spot to repository"
+        when: "Save #spot to repository"
         Optional<Spot> opt = sut.save(null)
 
-        then: "should return empty optional"
+        then: "Should return empty optional"
         opt == Optional.empty()
     }
 
@@ -52,10 +52,10 @@ class SpotRepoInMemorySpec extends Specification {
         when: "Save one spot"
         sut.save(spot)
 
-        and: "try to find saved spot by registration number"
+        and: "Try to find saved spot by registration number"
         Optional<Spot> found = sut.findVehicleByPlate(defaultRegistrationNo)
 
-        then: "saved spot should be found"
+        then: "Saved spot should be found"
         found?.isPresent()
 
         when: "Delete previous spot"
@@ -68,7 +68,7 @@ class SpotRepoInMemorySpec extends Specification {
         notFound == Optional.empty()
     }
 
-    def "should not find active parking space"() {
+    def "Should not find active parking space"() {
         when: "Try to find unsaved vehicle by plate"
         Optional<Spot> notFound = sut.findVehicleByPlate(defaultRegistrationNo)
 

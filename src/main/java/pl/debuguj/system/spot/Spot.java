@@ -2,6 +2,7 @@ package pl.debuguj.system.spot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,11 +14,11 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @Getter
-public class Spot implements Serializable {
+public final class Spot extends RepresentationModel<Spot> implements Serializable {
 
     @NotEmpty(message = "Vehicle plate cannot be empty.")
     @NotNull(message = "Vehicle plate must be provided.")
-    @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$", message = "Invalid email address.")
+    @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$", message = "Invalid plate number.")
     private final String vehiclePlate;
 
     @NotNull(message = "Driver type must be provided.")

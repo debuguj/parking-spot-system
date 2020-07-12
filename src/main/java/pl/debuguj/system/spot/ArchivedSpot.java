@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
-public class ArchivedSpot implements Serializable {
+public final class ArchivedSpot implements Serializable {
 
     private final UUID uuid = UUID.randomUUID();
 

@@ -1,5 +1,4 @@
 BASIC:
-- remove validation from archivedSpot, change it to dto
 - add docker with db
 - add jmeter tests
 - transaction

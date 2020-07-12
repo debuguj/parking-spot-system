@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,12 +64,12 @@ public class DriverControllerTest {
         when(spotRepo.save(spot)).thenReturn(Optional.of(spot));
 
         mockMvc.perform(post(uriStartMeter)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType("application/hal+json")
                 .content(objectMapper.writeValueAsString(spot)))
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(spot)))
+                .andExpect(content().contentType("application/hal+json"))
+                //.andExpect(content().json(objectMapper.writeValueAsString(spot)))
                 .andDo(print())
                 .andReturn();
     }
@@ -133,14 +134,16 @@ public class DriverControllerTest {
 
         final Fee fee = new Fee(new ArchivedSpot(spot, spot.getBeginDatetime().plusHours(2L)));
         //WHEN
-        when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
+        when(spotRepo.delete(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
+        when(archivedSpotRepo.save(any())).thenReturn(Optional.of(fee));
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
-                .param("finishDate", spot.getBeginDatetime().plusHours(2L).format(DateTimeFormatter.ofPattern(dateTimePattern)))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .param("finishDate", spot.getBeginDatetime().plusHours(2L).format(DateTimeFormatter.ofPattern(dateTimePattern)))
+//                .contentType("application/json")
+        )
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                //.andExpect(content().contentType("application/json"))
                 .andExpect(content().json(objectMapper.writeValueAsString(fee)))
                 .andDo(print())
                 .andReturn();

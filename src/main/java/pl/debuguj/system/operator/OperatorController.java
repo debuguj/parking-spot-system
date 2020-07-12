@@ -25,8 +25,8 @@ class OperatorController {
     @GetMapping("${uri.operator.check}")
     public HttpEntity<Spot> checkVehicleByPlate(@Valid @PathVariable @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$") String plate) {
 
-        final Spot spot = spotRepo.findVehicleByPlate(plate).orElseThrow(() -> new VehicleNotFoundException(plate));
-
-        return new ResponseEntity<>(spot, HttpStatus.OK);
+        return spotRepo.findVehicleByPlate(plate)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

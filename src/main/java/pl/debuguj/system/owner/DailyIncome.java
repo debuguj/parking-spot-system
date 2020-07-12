@@ -10,7 +10,7 @@ import java.util.Date;
 
 @AllArgsConstructor
 @Getter
-class DailyIncome implements Serializable {
+final class DailyIncome implements Serializable {
     private final LocalDate date;
     private final BigDecimal income;
 }
