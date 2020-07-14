@@ -1,5 +1,6 @@
 package pl.debuguj.system.spot
 
+import pl.debuguj.system.driver.Fee
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Subject
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter
 class ArchivedSpotRepoInMemorySpec extends Specification {
 
     @Subject
+    @Shared
     ArchivedSpotRepo sut = new ArchivedSpotRepoInMemory()
 
     @Shared
@@ -22,63 +24,62 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
     ArchivedSpot archivedSpot
 
     @Shared
-    LocalDate startDate = LocalDate.parse("2020-06-21", DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    LocalDate startDate = LocalDate.parse('2020-06-25', DateTimeFormatter.ofPattern('yyyy-MM-dd'))
     @Shared
     LocalDateTime ldt = startDate.atStartOfDay()
 
     def setup() {
         defBeginDateTime = LocalDateTime.now()
         defEndDateTime = defBeginDateTime.plusHours(2L)
-        archivedSpot = new ArchivedSpot("WZE12345", DriverType.REGULAR, defBeginDateTime, defEndDateTime)
+        archivedSpot = new ArchivedSpot('WZE12345', DriverType.REGULAR, defBeginDateTime, defEndDateTime)
     }
 
-    def "Should return empty optional because of null archived spot value"() {
-        when: "Save #archivedSpot to repository"
-        Optional<ArchivedSpot> opt = sut.save(null)
+    def 'should return empty optional because of null archived spot value'() {
+        when: 'save archived spot as null to repository'
+        Optional<Fee> opt = sut.save(null)
 
-        then: "Should return empty optional"
+        then: 'should return empty optional'
         opt == Optional.empty()
     }
 
-    def "Should save new archived spot to repository"() {
-        when: "Save #archivedSpot to repository"
-        Optional<ArchivedSpot> opt = sut.save(archivedSpot)
+    def 'should save new archived spot to repository'() {
+        when: 'save archived spot to repository'
+        Optional<Fee> opt = sut.save(archivedSpot)
 
-        then: "Should return not empty optional"
+        then: 'should return not empty optional'
         opt != Optional.empty()
 
-        and: "Values should be correct"
+        and: 'values should be correct'
         with(archivedSpot) {
-            uuid == opt.get().uuid
-            beginLocalDateTime == opt.get().beginLocalDateTime
-            endLocalDateTime == opt.get().endLocalDateTime
-            driverType == opt.get().driverType
-        }
+            vehiclePlate == opt.get().plate
+            beginLocalDateTime == opt.get().startTime
+            endLocalDateTime == opt.get().stopTime
+         }
     }
 
-    def "Should find all items by date"() {
-        given: "Values loaded to sut"
+    def 'should find all items by date'() {
+        given: 'Values loaded to sut'
         values.forEach(sut.&save)
 
-        when: "Get values by date #startDate"
+        when: "get values by date #startDate"
         def spotStream = sut.getAllByDay(startDate)
 
-        then: "Size of elements should be equal 2"
+        then: 'Size of elements should be equal 2'
         spotStream.size() == 2
 
         when: "Check size one day after start date #startDate"
         spotStream = sut.getAllByDay(startDate.plusDays(1L))
 
-        then: "The number of found items should be 3"
+        then: 'number of found items should be 3'
         spotStream.size() == 3
 
-        when: "Check size of list 2 days after #startDate"
+        when: "check size of list 2 days after #startDate"
         spotStream = sut.getAllByDay(startDate.plusDays(2L))
 
-        then: "The number of found items should be 0"
+        then: 'number of found items should be 0'
         spotStream.size() == 0
 
-        where: "Items for test"
+        where: 'items for test'
         values = [new ArchivedSpot("WWW66666", DriverType.REGULAR, ldt, ldt.plusHours(2L)),
                   new ArchivedSpot("WSQ77777", DriverType.REGULAR, ldt, ldt.plusHours(3L)),
                   new ArchivedSpot("QAZ88888", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusDays(1L).plusHours(4L)),

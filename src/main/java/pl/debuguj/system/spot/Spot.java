@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @Getter
-public final class Spot extends RepresentationModel<Spot> implements Serializable {
+public final class Spot implements Serializable {
 
     @NotEmpty(message = "Vehicle plate cannot be empty.")
     @NotNull(message = "Vehicle plate must be provided.")

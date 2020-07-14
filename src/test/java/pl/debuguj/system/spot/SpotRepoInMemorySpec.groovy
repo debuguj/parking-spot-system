@@ -12,67 +12,67 @@ class SpotRepoInMemorySpec extends Specification {
     SpotRepo sut = new SpotRepoInMemory()
 
     @Shared
-    String defaultRegistrationNo
+    String defaultVehiclePlate
     @Shared
     Spot spot
 
     def setup() {
-        defaultRegistrationNo = "WZE12345"
-        spot = new Spot(defaultRegistrationNo, DriverType.REGULAR, LocalDateTime.now())
+        defaultVehiclePlate = 'WZE12345'
+        spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, LocalDateTime.now())
     }
 
-    def "Should return empty optional because of null spot value"() {
-        when: "Save #spot to repository"
+    def 'should return empty optional because of null spot value'() {
+        when: "save #spot to repository"
         Optional<Spot> opt = sut.save(null)
 
-        then: "Should return empty optional"
+        then: 'should return empty optional'
         opt == Optional.empty()
     }
 
-    def "Should return empty optional because vehicle is active"() {
-        when: "Saved one spot"
+    def 'should return empty optional because vehicle is active'() {
+        when: 'saved one spot'
         sut.save(spot)
 
-        and: "Save the same spot again"
+        and: 'save the same spot again'
         Optional<Spot> opt = sut.save(spot)
 
-        then: "Should return empty optional"
+        then: 'should return empty optional'
         opt == Optional.empty()
     }
 
-    def "Should return not empty optional because vehicle is not saved"() {
-        when: "Save spot to repository"
+    def 'should return not empty optional because vehicle is not saved'() {
+        when: 'save spot to repository'
         Optional<Spot> opt = sut.save(spot)
 
-        then: "Should return value in optional"
+        then: 'should return value in optional'
         opt != Optional.empty()
     }
 
-    def "Should delete active Spot"() {
-        when: "Save one spot"
+    def 'should delete active spot'() {
+        when: 'save one spot'
         sut.save(spot)
 
-        and: "Try to find saved spot by registration number"
-        Optional<Spot> found = sut.findVehicleByPlate(defaultRegistrationNo)
+        and: 'try to find saved spot by vehicle plate'
+        Optional<Spot> found = sut.findVehicleByPlate(defaultVehiclePlate)
 
-        then: "Saved spot should be found"
+        then: 'saved spot should be found'
         found?.isPresent()
 
-        when: "Delete previous spot"
+        when: 'delete previous spot'
         sut.delete(spot.getVehiclePlate())
 
-        and: "Try find previously saved spot"
-        Optional<Spot> notFound = sut.findVehicleByPlate(defaultRegistrationNo)
+        and: 'try find previously saved spot'
+        Optional<Spot> notFound = sut.findVehicleByPlate(defaultVehiclePlate)
 
-        then: "Should not be found"
+        then: 'should not be found'
         notFound == Optional.empty()
     }
 
-    def "Should not find active parking space"() {
-        when: "Try to find unsaved vehicle by plate"
-        Optional<Spot> notFound = sut.findVehicleByPlate(defaultRegistrationNo)
+    def 'should not find active parking space'() {
+        when: 'try to find unsaved vehicle by plate'
+        Optional<Spot> notFound = sut.findVehicleByPlate(defaultVehiclePlate)
 
-        then: "Should not be find"
+        then: 'should not be find'
         notFound == Optional.empty()
     }
 }

@@ -64,10 +64,10 @@ public class OperatorControllerTest {
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
 
         mockMvc.perform(get(uriCheckVehicle, spot.getVehiclePlate())
-                .contentType("application/hal+json"))
+                .contentType("application/json"))
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/hal+json"))
+                .andExpect(content().contentType("application/json"))
                 //.andExpect(content().json(objectMapper.writeValueAsString(spot)))
                 .andDo(print())
                 .andReturn();

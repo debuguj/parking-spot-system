@@ -17,14 +17,14 @@ class ArchivedSpotRepoInMemoryTest {
 
     private static final LocalDateTime defBeginDateTime = LocalDateTime.now();
     private static final LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L);
-    private static final String defRegistrationNumber = "WZE12345";
+    private static final String defaultVehiclePlate = "WZE12345";
     private static ArchivedSpot archivedSpot;
 
     private final String basicDateString = "2020-06-21";
 
     @BeforeAll
     static void init() {
-        archivedSpot = new ArchivedSpot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime, defEndDateTime);
+        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, defEndDateTime);
     }
 
     @Test
@@ -49,8 +49,8 @@ class ArchivedSpotRepoInMemoryTest {
 
     @Test
     public void shouldFindAllByDate() {
-        List<ArchivedSpot> loadings = createArchiveSpotsList();
-        loadings.forEach(sut::save);
+
+        createArchiveSpotsList().forEach(sut::save);
 
         LocalDate date = LocalDate.parse(basicDateString);
 

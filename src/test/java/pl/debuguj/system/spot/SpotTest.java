@@ -23,12 +23,12 @@ class SpotTest {
     private Validator validator;
 
     private static final LocalDateTime defaultDateTime = LocalDateTime.now();
-    private static final String defaultRegistrationNumber = "WZE12345";
+    private static final String defaultVehiclePlate = "WZE12345";
     private static Spot spot;
 
     @BeforeAll
     static void init() {
-        spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
+        spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime);
     }
 
     @BeforeEach
@@ -49,7 +49,7 @@ class SpotTest {
 
     @Test
     void shouldAcceptCorrectParameters() {
-        assertEquals(spot.getVehiclePlate(), defaultRegistrationNumber);
+        assertEquals(spot.getVehiclePlate(), defaultVehiclePlate);
         assertEquals(spot.getDriverType(), DriverType.REGULAR);
         assertEquals(spot.getBeginDatetime(), defaultDateTime);
     }
@@ -62,9 +62,9 @@ class SpotTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"e12345", "", " ", "     ", "12345", "qeee12345", "registrationNo", "qwe123456",
-            "qwe123", "E12345", "12345", "QEEE12345", "registrationNo", "QWE123456", "QWE123"})
-    void shouldReturnViolationBecauseOfIncorrectRegistrationNumber(String number) {
+    @ValueSource(strings = {"e12345", "", " ", "     ", "12345", "qeee12345", "vehiclePlate", "qwe123456",
+            "qwe123", "E12345", "12345", "QEEE12345", "vehiclePlate55", "QWE123456", "QWE123"})
+    void shouldReturnViolationBecauseOfIncorrectVehiclePlate(String number) {
         final Spot spot = new Spot(number, DriverType.REGULAR, defaultDateTime);
 
         Set<ConstraintViolation<Spot>> violations = this.validator.validate(spot);

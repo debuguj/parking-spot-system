@@ -16,6 +16,7 @@ import pl.debuguj.system.spot.ArchivedSpotRepo;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ class OwnerController {
     @GetMapping(value = "${uri.owner.income}")
     public HttpEntity<DailyIncome> getIncomePerDay(@Valid @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
-        List<ArchivedSpot> archivedSpotList = archivedSpotRepo.getAllByDay(date);
+        final Collection<ArchivedSpot> archivedSpotList = archivedSpotRepo.getAllByDay(date);
 
         if (archivedSpotList.size() > 0) {
             BigDecimal income = archivedSpotList.stream()

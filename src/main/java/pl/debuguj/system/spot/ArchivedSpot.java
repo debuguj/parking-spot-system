@@ -25,6 +25,8 @@ public final class ArchivedSpot implements Serializable {
     private final LocalDateTime endLocalDateTime;
 
     public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
+        Objects.requireNonNull(spot, "Spot cannot be null");
+
         if (endLocalDateTime.isBefore(spot.getBeginDatetime())) {
             throw new IncorrectFinishDateException(spot.getBeginDatetime(), endLocalDateTime);
         }

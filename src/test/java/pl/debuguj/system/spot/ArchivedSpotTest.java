@@ -10,8 +10,6 @@ import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.external.CurrencyRate;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,12 +22,12 @@ class ArchivedSpotTest {
 
     private static final LocalDateTime defBeginDateTime = LocalDateTime.now();
     private static final LocalDateTime defEndDate = LocalDateTime.now().plusHours(2L);
-    private static final String defRegistrationNumber = "WZE12345";
+    private static final String defaultVehiclePlate = "WZE12345";
     private static ArchivedSpot archivedSpot;
 
     @BeforeAll
     static void init() {
-        archivedSpot = new ArchivedSpot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime, defEndDate);
+        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, defEndDate);
     }
 
     @Test
@@ -48,7 +46,7 @@ class ArchivedSpotTest {
     @Test
     public void shouldAcceptCorrectParameters() {
 
-        assertEquals(archivedSpot.getVehiclePlate(), defRegistrationNumber);
+        assertEquals(archivedSpot.getVehiclePlate(), defaultVehiclePlate);
         assertEquals(archivedSpot.getDriverType(), DriverType.REGULAR);
         assertNotEquals(archivedSpot.getDriverType(), DriverType.VIP);
         assertEquals(archivedSpot.getBeginLocalDateTime(), defBeginDateTime);
@@ -58,15 +56,15 @@ class ArchivedSpotTest {
     @Test
     public void shouldReturnEmptyOptionalBecauseOfNullFinishDate() {
         final ArchivedSpot archivedSpot
-                = new ArchivedSpot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime, null);
+                = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, null);
 
         assertEquals(Optional.empty(), archivedSpot.getFee());
     }
 
     @Test
     public void shouldThrowExceptionBecauseFinishDateIsBeforeStartDate() {
-        final LocalDateTime incorrectLocalDateTime = defBeginDateTime.minusHours(2l);
-        final Spot spot = new Spot(defRegistrationNumber, DriverType.REGULAR, defBeginDateTime);
+        final LocalDateTime incorrectLocalDateTime = defBeginDateTime.minusHours(2L);
+        final Spot spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime);
 
         Exception exception = assertThrows(IncorrectFinishDateException.class, () ->
                 new ArchivedSpot(spot, incorrectLocalDateTime));
@@ -83,9 +81,9 @@ class ArchivedSpotTest {
             "2020-06-12T11:15:48, 2020-06-13T11:14:12, 16777215.0",
             "2020-06-12T10:10:10, 2020-06-12T22:13:10, 8191.0"
     })
-    public void shouldReturnCorrectFeeForRegularDriver(ArgumentsAccessor arguments) throws Exception {
+    public void shouldReturnCorrectFeeForRegularDriver(ArgumentsAccessor arguments) {
         ArchivedSpot archivedSpot = new ArchivedSpot(
-                defRegistrationNumber,
+                defaultVehiclePlate,
                 DriverType.REGULAR,
                 arguments.get(0, LocalDateTime.class),
                 arguments.get(1, LocalDateTime.class));
@@ -101,9 +99,9 @@ class ArchivedSpotTest {
             "2020-10-12T00:15:48, 2020-10-12T15:35:12, 1747.6",
             "2020-10-12T11:15:48, 2020-10-13T11:14:12, 44887.0"
     })
-    public void shouldReturnCorrectFeeForVipDriver(ArgumentsAccessor arguments) throws Exception {
+    public void shouldReturnCorrectFeeForVipDriver(ArgumentsAccessor arguments) {
         ArchivedSpot archivedSpot = new ArchivedSpot(
-                defRegistrationNumber,
+                defaultVehiclePlate,
                 DriverType.VIP,
                 arguments.get(0, LocalDateTime.class),
                 arguments.get(1, LocalDateTime.class));

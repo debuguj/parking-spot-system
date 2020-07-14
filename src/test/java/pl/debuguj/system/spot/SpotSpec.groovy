@@ -8,8 +8,6 @@ import spock.lang.Unroll
 
 import javax.validation.ConstraintViolation
 import javax.validation.Validation
-import javax.validation.Validator
-import javax.validation.ValidatorFactory
 import java.time.LocalDateTime
 
 class SpotSpec extends Specification {
@@ -23,24 +21,21 @@ class SpotSpec extends Specification {
     @Shared
     LocalDateTime defaultDateTime
     @Shared
-    def defaultRegistrationNumber
-
-    def setup() {
-        defaultDateTime = LocalDateTime.now()
-        defaultRegistrationNumber = "WZE12345"
-        spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime)
-    }
+    def defaultVehiclePlate
 
     def setupSpec() {
+        defaultDateTime = LocalDateTime.now()
+        defaultVehiclePlate = 'WZE12345'
+        spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime)
         def vf = Validation.buildDefaultValidatorFactory()
         validator = vf.getValidator()
     }
 
-    def "Should be serialized correctly"() {
-        given: "After #spot serialization to #other object"
+    def 'should be serialized correctly'() {
+        given: "after #spot serialization to #other object"
         def other = (Spot) SerializationUtils.deserialize(SerializationUtils.serialize(spot))
 
-        expect: 'Should return valid and correct values'
+        expect: 'should return valid and correct values'
         with(other) {
             vehiclePlate == spot.vehiclePlate
             driverType == spot.driverType
@@ -48,55 +43,55 @@ class SpotSpec extends Specification {
         }
     }
 
-    def "Creating new spot with valid input"() {
-        expect: "Valid variables values"
+    def 'creating new spot with valid input'() {
+        expect: 'valid variables values'
         with(spot) {
-            vehiclePlate == "WZE12345"
+            vehiclePlate == 'WZE12345'
             beginDatetime == defaultDateTime
             driverType == DriverType.REGULAR
         }
     }
 
-    def "Should not return violations"() {
-        when: "Input is valid"
+    def "should not return violations"() {
+        when: "input is valid"
         Set<ConstraintViolation<Spot>> violations = validator.validate(spot)
 
-        then: "Returns no violations"
+        then: 'returns no violations'
         violations.isEmpty()
     }
 
     @Unroll
-    def "Should return violations because of one null parameters: #plate #driverType #beginDate"() {
-        given: "Spot with invalid input"
+    def "should return violations because of one null parameters: #plate #driverType #beginDate"() {
+        given: 'spot with invalid input'
         def invalidSpot = new Spot(plate, driverType, beginDate)
 
-        when: "Checking by validator"
+        when: 'checking by validator'
         Set<ConstraintViolation<Spot>> violations = validator.validate(invalidSpot)
 
-        then: "The number of violation should be greater than 0"
+        then: 'number of violation should be greater than 0'
         violations.size() > 0
 
-        where: "Invalid input is: "
+        where: 'invalid input is: '
         plate      | driverType         | beginDate
         null       | DriverType.REGULAR | defaultDateTime
-        "WCD12345" | null               | defaultDateTime
-        "WCI12345" | DriverType.REGULAR | null
+        'WCD12345' | null               | defaultDateTime
+        'WCI12345' | DriverType.REGULAR | null
     }
 
     @Unroll
-    def "Should return violations because of incorrect registration number: #plate"() {
-        given: "Spot wih invalid registration number"
+    def "should return violations because of incorrect vehicle plate: #plate"() {
+        given: 'spot wih invalid vehicle plate'
         def invalidSpot = new Spot(plate, DriverType.REGULAR, defaultDateTime)
 
-        when: "Checking by validator"
+        when: 'Checking by validator'
         Set<ConstraintViolation<Spot>> violations = this.validator.validate(invalidSpot)
 
-        then: "Violation should be greater than 0"
+        then: 'violation should be greater than 0'
         violations.size() > 0
 
-        where: "Sets of plates to check"
-        plate << ["e12345", "", " ", "     ", "12345", "qeee12345", "registrationNo", "qwe123456",
-                  "qwe123", "E12345", "12345", "QEEE12345", "registrationNo", "QWE123456", "QWE123"]
+        where: 'sets of plates to check'
+        plate << ['e12345', '', ' ', '     ', '12345', 'qeee12345', 'vehiclePlate', 'qwe123456',
+                  'qwe123', 'E12345', '12345', 'QEEE12345', 'vehiclePlate123', 'QWE123456', 'QWE123']
     }
 
 }

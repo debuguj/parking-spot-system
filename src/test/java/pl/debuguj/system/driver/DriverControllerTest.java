@@ -2,7 +2,6 @@ package pl.debuguj.system.driver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.debuguj.system.exceptions.VehicleActiveInDbException;
 import pl.debuguj.system.exceptions.VehicleCannotBeRegisteredInDbException;
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException;
 import pl.debuguj.system.spot.*;
 
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -53,23 +48,23 @@ public class DriverControllerTest {
     private ArchivedSpotRepo archivedSpotRepo;
 
     private static final LocalDateTime defaultDateTime = LocalDateTime.now();
-    private static final String defaultRegistrationNumber = "WZE12345";
+    private static final String defaultVehiclePlate = "WZE12345";
 
     @Test
     @DisplayName("Should return a correct payload after request")
     public void shouldReturnCorrectPayloadAndFormatAndValue() throws Exception {
-        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
+        final Spot spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime);
         //WHEN
-        when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.empty());
+        //when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.empty());
         when(spotRepo.save(spot)).thenReturn(Optional.of(spot));
 
         mockMvc.perform(post(uriStartMeter)
-                .contentType("application/hal+json")
+                .contentType("application/json")
                 .content(objectMapper.writeValueAsString(spot)))
                 //THEN
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/hal+json"))
-                //.andExpect(content().json(objectMapper.writeValueAsString(spot)))
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().json(objectMapper.writeValueAsString(spot)))
                 .andDo(print())
                 .andReturn();
     }
@@ -77,10 +72,7 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return redirection because a vehicle is active")
     public void shouldReturnRedirectionBecauseOfVehicleIsActive() throws Exception {
-        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
-        //WHEN
-        when(spotRepo.findVehicleByPlate(spot.getVehiclePlate()))
-                .thenThrow(new VehicleActiveInDbException(spot.getVehiclePlate()));
+        final Spot spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime);
 
         mockMvc.perform(post(uriStartMeter)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -95,9 +87,8 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return lock because a vehicle cannot be registered")
     public void shouldReturnLockedBecauseOfVehicleCannotBeRegistered() throws Exception {
-        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
+        final Spot spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime);
         //WHEN
-        when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenReturn(Optional.empty());
         when(spotRepo.save(spot)).thenThrow(new VehicleCannotBeRegisteredInDbException(spot.getVehiclePlate()));
 
         mockMvc.perform(post(uriStartMeter)
@@ -113,7 +104,7 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return Not Found because vehicle is not active")
     public void shouldReturnNotFoundBecauseVehicleIsNotActive() throws Exception {
-        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
+        final Spot spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime);
         //WHEN
         when(spotRepo.findVehicleByPlate(spot.getVehiclePlate())).thenThrow(new VehicleNotExistsInDbException(spot.getVehiclePlate()));
 
@@ -130,7 +121,7 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Should return correct fee")
     public void shouldReturnCorrectFee() throws Exception {
-        final Spot spot = new Spot(defaultRegistrationNumber, DriverType.REGULAR, defaultDateTime);
+        final Spot spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime);
 
         final Fee fee = new Fee(new ArchivedSpot(spot, spot.getBeginDatetime().plusHours(2L)));
         //WHEN
@@ -139,11 +130,11 @@ public class DriverControllerTest {
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
                         .param("finishDate", spot.getBeginDatetime().plusHours(2L).format(DateTimeFormatter.ofPattern(dateTimePattern)))
-//                .contentType("application/json")
+                .contentType("application/json")
         )
                 //THEN
                 .andExpect(status().isOk())
-                //.andExpect(content().contentType("application/json"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(content().json(objectMapper.writeValueAsString(fee)))
                 .andDo(print())
                 .andReturn();
