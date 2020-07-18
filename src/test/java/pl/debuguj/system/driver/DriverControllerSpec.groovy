@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import pl.debuguj.system.exceptions.VehicleCannotBeRegisteredInDbException
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException
@@ -22,7 +21,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@ContextConfiguration
 @WebMvcTest(controllers = [DriverController])
 class DriverControllerSpec extends Specification {
 

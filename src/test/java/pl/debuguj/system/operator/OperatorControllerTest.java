@@ -17,7 +17,6 @@ import pl.debuguj.system.spot.Spot;
 import pl.debuguj.system.spot.SpotRepo;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;

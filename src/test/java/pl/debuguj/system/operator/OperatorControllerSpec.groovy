@@ -5,9 +5,7 @@ import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
-import pl.debuguj.system.exceptions.VehicleCannotBeRegisteredInDbException
 import pl.debuguj.system.exceptions.VehicleNotFoundException
 import pl.debuguj.system.spot.DriverType
 import pl.debuguj.system.spot.Spot
@@ -18,11 +16,9 @@ import spock.lang.Specification
 import java.time.LocalDateTime
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@ContextConfiguration
 @WebMvcTest(controllers = [OperatorController])
 class OperatorControllerSpec  extends Specification {
 

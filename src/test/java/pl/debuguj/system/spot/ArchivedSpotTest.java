@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ArchivedSpotTest {
 
-    private CurrencyRate currencyRate = CurrencyRate.PLN;
+    private final CurrencyRate currencyRate = CurrencyRate.PLN;
 
     private static final LocalDateTime defBeginDateTime = LocalDateTime.now();
     private static final LocalDateTime defEndDate = LocalDateTime.now().plusHours(2L);

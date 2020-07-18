@@ -2,14 +2,12 @@ package pl.debuguj.system.spot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @AllArgsConstructor

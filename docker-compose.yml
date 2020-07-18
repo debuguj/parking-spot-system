@@ -1,0 +1,35 @@
+version: "3"
+services:
+  app-server:
+    container_name: 'spot_system'
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '8085:8085'
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/spotss?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+      SPRING_DATASOURCE_USERNAME: debuguj
+      SPRING_DATASOURCE_PASSWORD: debuguj
+    networks:
+      - backend
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: spots
+      MYSQL_USER: debuguj
+      MYSQL_PASSWORD: debuguj
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend
+volumes:
+  db-data:
+networks:
+  backend:

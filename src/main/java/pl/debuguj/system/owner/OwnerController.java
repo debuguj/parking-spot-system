@@ -17,7 +17,6 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,7 +36,7 @@ class OwnerController {
         final Collection<ArchivedSpot> archivedSpotList = archivedSpotRepo.getAllByDay(date);
 
         if (archivedSpotList.size() > 0) {
-            BigDecimal income = archivedSpotList.stream()
+            final BigDecimal income = archivedSpotList.stream()
                     .map(as -> as.getFee(currencyRateHandler.getCurrencyRate()))
                     .filter(Optional::isPresent)
                     .map(Optional::get)

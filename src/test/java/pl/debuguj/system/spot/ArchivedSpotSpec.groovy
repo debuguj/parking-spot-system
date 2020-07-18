@@ -95,7 +95,7 @@ class ArchivedSpotSpec extends Specification {
         expect: 'correct value of fee'
         invalidSpot.getFee(currencyRate).ifPresent({ f -> new BigDecimal(fee) == f })
 
-        where: "valid #fee for period between #beginDate and #endDate is:"
+        where: "valid #fee for period between #beginDate and #endDate"
         beginDate             | endDate               || fee
         '2020-06-12T11:15:48' | '2020-06-12T11:35:12' || 1.0
         '2020-06-12T11:15:48' | '2020-06-12T12:35:12' || 3.0

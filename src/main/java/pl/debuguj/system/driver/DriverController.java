@@ -7,9 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.exceptions.VehicleActiveInDbException;
-import pl.debuguj.system.exceptions.VehicleCannotBeRegisteredInDbException;
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException;
 import pl.debuguj.system.spot.ArchivedSpot;
 import pl.debuguj.system.spot.ArchivedSpotRepo;
@@ -20,7 +18,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Created by GB on 07.03.20.

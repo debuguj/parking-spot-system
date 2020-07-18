@@ -4,12 +4,10 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Log
-@Configuration
-@PropertySource("classpath:global.properties")
+//@Configuration
+//@PropertySource("classpath:global.properties")
 public class SimpleConfig {
 
     @Value("${db.test}")
@@ -17,8 +15,6 @@ public class SimpleConfig {
 
     @Bean
     ApplicationRunner applicationConfigRunner() {
-        return args -> {
-            log.info("Msg from CONFIG class: " + simpleString);
-        };
+        return args -> log.info("Msg from CONFIG class: " + simpleString);
     }
 }

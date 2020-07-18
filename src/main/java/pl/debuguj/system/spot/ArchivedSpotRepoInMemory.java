@@ -5,7 +5,6 @@ import pl.debuguj.system.driver.Fee;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
 
-    private static Map<UUID, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
+    private static final Map<UUID, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
     public Optional<Fee> save(final ArchivedSpot archivedSpot) {
