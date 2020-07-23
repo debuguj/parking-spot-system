@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 @Repository
 public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
 
-    private static final Map<UUID, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
+    private static final Map<Long, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
     public Optional<Fee> save(final ArchivedSpot archivedSpot) {
         if (Objects.nonNull(archivedSpot)) {
-            mapParkingSpots.put(archivedSpot.getUuid(), archivedSpot);
+            mapParkingSpots.put(archivedSpot.getId(), archivedSpot);
             return Optional.of(new Fee(archivedSpot));
         }
         return Optional.empty();

@@ -2,26 +2,37 @@ package pl.debuguj.system.spot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import pl.debuguj.system.basic.BasicEntity;
 import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.external.CurrencyRate;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
-public final class ArchivedSpot implements Serializable {
+@Table(name = "archived_spot")
+public final class ArchivedSpot extends BasicEntity implements Serializable {
 
-    private final UUID uuid = UUID.randomUUID();
-
+    @Column(name = "vehicle_plate")
     private final String vehiclePlate;
+
+    @Column(name = "driver_type")
+    @Enumerated(EnumType.STRING)
     private final DriverType driverType;
+
+    @Column(name = "begin_datetime")
     private final LocalDateTime beginLocalDateTime;
+
+    @Column(name = "end_datetime")
     private final LocalDateTime endLocalDateTime;
 
     public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
@@ -41,12 +52,12 @@ public final class ArchivedSpot implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArchivedSpot that = (ArchivedSpot) o;
-        return uuid.equals(that.uuid);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
+        return Objects.hash(id);
     }
 
     public Optional<BigDecimal> getFee() {

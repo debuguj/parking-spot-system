@@ -64,6 +64,17 @@ class ArchivedSpotSpec extends Specification {
         }
     }
 
+    def 'should returns no null params'() {
+        expect:
+        with(archivedSpot) {
+            uuid != null
+            vehiclePlate != null
+            driverType != null
+            beginLocalDateTime != null
+            endLocalDateTime != null
+        }
+    }
+
     def 'should return empty optional for fee because of null finish date'() {
         given: 'archive spot with invalid finish date'
         def invalidArchivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, null)

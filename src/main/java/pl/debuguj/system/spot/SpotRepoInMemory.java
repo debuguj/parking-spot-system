@@ -1,5 +1,6 @@
 package pl.debuguj.system.spot;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by GB on 05.03.2020.
  */
+
 @Repository
 public class SpotRepoInMemory implements SpotRepo {
 

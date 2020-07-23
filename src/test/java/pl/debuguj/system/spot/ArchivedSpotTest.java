@@ -36,7 +36,7 @@ class ArchivedSpotTest {
         final ArchivedSpot other = (ArchivedSpot) SerializationUtils.deserialize(SerializationUtils.serialize(archivedSpot));
 
         Objects.requireNonNull(other);
-        assertEquals(other.getUuid(), archivedSpot.getUuid());
+        assertEquals(other.getId(), archivedSpot.getId());
         assertEquals(other.getVehiclePlate(), archivedSpot.getVehiclePlate());
         assertEquals(other.getDriverType(), archivedSpot.getDriverType());
         assertEquals(other.getBeginLocalDateTime(), archivedSpot.getBeginLocalDateTime());
