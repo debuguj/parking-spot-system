@@ -47,9 +47,10 @@ class DriverController {
 
         final Spot spot = spotRepo.delete(plate).orElseThrow(() -> new VehicleNotExistsInDbException(plate));
 
-        return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
-                .map(fee -> ResponseEntity.ok().body(fee))
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+//        return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
+//                .map(archivedSpot -> ResponseEntity.ok().body(new Fee(archivedSpot))
+//                .orElseGet(() -> ResponseEntity.badRequest().build()));
+        return null;
     }
 
     @PostMapping(value = "${uri.simple}")

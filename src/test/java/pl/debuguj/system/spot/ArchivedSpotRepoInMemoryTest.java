@@ -29,21 +29,21 @@ class ArchivedSpotRepoInMemoryTest {
 
     @Test
     public void shouldReturnEmptyOptional() {
-        Optional<Fee> opt = sut.save(null);
+        Optional<ArchivedSpot> opt = sut.save(null);
         assertFalse(opt.isPresent());
     }
 
     @Test
     public void shouldSaveNewArchivedSpot() {
 
-        Optional<Fee> returned = sut.save(archivedSpot);
+        Optional<ArchivedSpot> returned = sut.save(archivedSpot);
 
         assertTrue(returned.isPresent());
 
-        returned.ifPresent(fee -> {
-            assertEquals(archivedSpot.getVehiclePlate(), fee.getPlate());
-            assertEquals(archivedSpot.getBeginLocalDateTime(), fee.getStartTime());
-            assertEquals(archivedSpot.getEndLocalDateTime(), fee.getStopTime());
+        returned.ifPresent(as -> {
+            assertEquals(archivedSpot.getVehiclePlate(), as.getVehiclePlate());
+            assertEquals(archivedSpot.getBeginLocalDateTime(), as.getBeginLocalDateTime());
+            assertEquals(archivedSpot.getEndLocalDateTime(), as.getEndLocalDateTime());
         });
     }
 

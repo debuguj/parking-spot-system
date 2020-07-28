@@ -2,14 +2,12 @@ package pl.debuguj.system.spot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import pl.debuguj.system.basic.BasicEntity;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import pl.debuguj.system.exceptions.IncorrectFinishDateException;
-import pl.debuguj.system.external.CurrencyRate;
+import pl.debuguj.system.external.systems.CurrencyRate;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,23 +15,35 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Optional;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Table(name = "archived_spot")
-public final class ArchivedSpot extends BasicEntity implements Serializable {
+@Entity
+public final class ArchivedSpot implements Serializable {
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.AUTO,
+            generator="native"
+    )
+    @GenericGenerator(
+            name = "native",
+            strategy = "native"
+    )
+    private Long id;
 
     @Column(name = "vehicle_plate")
-    private final String vehiclePlate;
+    private String vehiclePlate;
 
     @Column(name = "driver_type")
     @Enumerated(EnumType.STRING)
-    private final DriverType driverType;
+    private DriverType driverType;
 
     @Column(name = "begin_datetime")
-    private final LocalDateTime beginLocalDateTime;
+    private LocalDateTime beginLocalDateTime;
 
     @Column(name = "end_datetime")
-    private final LocalDateTime endLocalDateTime;
+    private LocalDateTime endLocalDateTime;
 
     public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
         Objects.requireNonNull(spot, "Spot cannot be null");
@@ -45,6 +55,13 @@ public final class ArchivedSpot extends BasicEntity implements Serializable {
         this.driverType = spot.getDriverType();
         this.beginLocalDateTime = spot.getBeginDatetime();
         this.endLocalDateTime = endLocalDateTime;
+    }
+
+    public ArchivedSpot(String defaultVehiclePlate, DriverType regular, LocalDateTime defBeginDateTime, LocalDateTime defEndDateTime) {
+        this.vehiclePlate = defaultVehiclePlate;
+        this.driverType = regular;
+        this.beginLocalDateTime = defBeginDateTime;
+        this.endLocalDateTime = defEndDateTime;
     }
 
     @Override

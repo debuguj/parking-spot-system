@@ -1,6 +1,5 @@
 package pl.debuguj.system.spot;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Repository
-public class SpotRepoInMemory implements SpotRepo {
+class SpotRepoInMemory implements SpotRepo {
 
     //TODO: add parking capacity limit
     private final Map<String, Spot> mapParkingSpots = new ConcurrentHashMap<>();

@@ -20,34 +20,12 @@ public class DbConfig {
     private String username;
     private String password;
 
-    @Profile("dev")
     @Bean
-    public String devDatabaseConnection(){
+    public String paramsDatabaseConnection(){
         log.info(driverClassName);
         log.info(url);
         log.info(username);
         log.info(password);
-        return "DB connection profile: DEV";
+        return "DB connection profile details";
     }
-
-    @Profile("test")
-    @Bean
-    public String testDatabaseConnection(){
-        log.info(driverClassName);
-        log.info(url);
-        log.info(username);
-        log.info(password);
-        return "DB connection profile: TEST";
-    }
-
-    @Profile("prod")
-    @Bean
-    public String prodDatabaseConnection(){
-        log.info(driverClassName);
-        log.info(url);
-        log.info(username);
-        log.info(password);
-        return "DB connection profile: PROD";
-    }
-
 }

@@ -123,10 +123,11 @@ public class DriverControllerTest {
     public void shouldReturnCorrectFee() throws Exception {
         final Spot spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime);
 
-        final Fee fee = new Fee(new ArchivedSpot(spot, spot.getBeginDatetime().plusHours(2L)));
+        final ArchivedSpot archivedSpot = new ArchivedSpot(spot, spot.getBeginDatetime().plusHours(2L));
+        final Fee fee = new Fee(archivedSpot);
         //WHEN
         when(spotRepo.delete(spot.getVehiclePlate())).thenReturn(Optional.of(spot));
-        when(archivedSpotRepo.save(any())).thenReturn(Optional.of(fee));
+        when(archivedSpotRepo.save(any())).thenReturn(Optional.of(archivedSpot));
 
         mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())
                         .param("finishDate", spot.getBeginDatetime().plusHours(2L).format(DateTimeFormatter.ofPattern(dateTimePattern)))

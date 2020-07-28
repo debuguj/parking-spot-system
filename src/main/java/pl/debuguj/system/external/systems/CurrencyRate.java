@@ -1,4 +1,4 @@
-package pl.debuguj.system.external;
+package pl.debuguj.system.external.systems;
 
 import lombok.Getter;
 

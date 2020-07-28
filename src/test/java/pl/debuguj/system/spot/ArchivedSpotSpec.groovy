@@ -2,7 +2,7 @@ package pl.debuguj.system.spot
 
 import org.springframework.util.SerializationUtils
 import pl.debuguj.system.exceptions.IncorrectFinishDateException
-import pl.debuguj.system.external.CurrencyRate
+import pl.debuguj.system.external.systems.CurrencyRate
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Subject

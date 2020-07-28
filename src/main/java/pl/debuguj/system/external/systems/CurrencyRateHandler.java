@@ -1,4 +1,4 @@
-package pl.debuguj.system.external;
+package pl.debuguj.system.external.systems;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -7,7 +7,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.util.SerializationUtils;
 import pl.debuguj.system.exceptions.IncorrectFinishDateException;
-import pl.debuguj.system.external.CurrencyRate;
+import pl.debuguj.system.external.systems.CurrencyRate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

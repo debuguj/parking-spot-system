@@ -10,15 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Repository
-public class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
+class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
 
     private static final Map<Long, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
-    public Optional<Fee> save(final ArchivedSpot archivedSpot) {
+    public Optional<ArchivedSpot> save(final ArchivedSpot archivedSpot) {
         if (Objects.nonNull(archivedSpot)) {
             mapParkingSpots.put(archivedSpot.getId(), archivedSpot);
-            return Optional.of(new Fee(archivedSpot));
+            return Optional.of(archivedSpot);
         }
         return Optional.empty();
     }

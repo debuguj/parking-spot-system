@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import pl.debuguj.system.external.CurrencyRate
-import pl.debuguj.system.external.CurrencyRateHandler
+import pl.debuguj.system.external.systems.CurrencyRate
+import pl.debuguj.system.external.systems.CurrencyRateHandler
 import pl.debuguj.system.spot.ArchivedSpot
 import pl.debuguj.system.spot.ArchivedSpotRepo
 import pl.debuguj.system.spot.DriverType
