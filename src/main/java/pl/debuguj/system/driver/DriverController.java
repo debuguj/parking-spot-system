@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by GB on 07.03.20.
@@ -47,10 +48,9 @@ class DriverController {
 
         final Spot spot = spotRepo.delete(plate).orElseThrow(() -> new VehicleNotExistsInDbException(plate));
 
-//        return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
-//                .map(archivedSpot -> ResponseEntity.ok().body(new Fee(archivedSpot))
-//                .orElseGet(() -> ResponseEntity.badRequest().build()));
-        return null;
+        return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
+                .map(archivedSpot -> ResponseEntity.ok().body(new Fee(archivedSpot)))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PostMapping(value = "${uri.simple}")

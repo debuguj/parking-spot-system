@@ -36,19 +36,19 @@ public class ParkingSpotsSystemApplication {
         SpringApplication.run(ParkingSpotsSystemApplication.class, args);
     }
 
-    @Bean
-    ApplicationRunner applicationRunner() {
-        return args -> {
-            spotRepo.save(new Spot("WCI12345", DriverType.REGULAR, LocalDateTime.now()));
-            spotRepo.save(new Spot("WCI12346", DriverType.REGULAR, LocalDateTime.now()));
-            spotRepo.save(new Spot("WCI12347", DriverType.REGULAR, LocalDateTime.now()));
-            spotRepo.save(new Spot("WCI12348", DriverType.REGULAR, LocalDateTime.now()));
-            archivedSpotRepo.save(new ArchivedSpot("WCI12348", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(2L)));
-            archivedSpotRepo.save(new ArchivedSpot("WCI12349", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(3L)));
-            archivedSpotRepo.save(new ArchivedSpot("WCI12323", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(5L)));
-            archivedSpotRepo.save(new ArchivedSpot("WCI12322", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(12L)));
-        };
-    }
+//    @Bean
+//    ApplicationRunner applicationRunner() {
+//        return args -> {
+//            spotRepo.save(new Spot("WCI12345", DriverType.REGULAR, LocalDateTime.now()));
+//            spotRepo.save(new Spot("WCI12346", DriverType.REGULAR, LocalDateTime.now()));
+//            spotRepo.save(new Spot("WCI12347", DriverType.REGULAR, LocalDateTime.now()));
+//            spotRepo.save(new Spot("WCI12348", DriverType.REGULAR, LocalDateTime.now()));
+//            archivedSpotRepo.save(new ArchivedSpot("WCI12348", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(2L)));
+//            archivedSpotRepo.save(new ArchivedSpot("WCI12349", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(3L)));
+//            archivedSpotRepo.save(new ArchivedSpot("WCI12323", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(5L)));
+//            archivedSpotRepo.save(new ArchivedSpot("WCI12322", DriverType.REGULAR, LocalDateTime.now(), LocalDateTime.now().plusHours(12L)));
+//        };
+//    }
 //    @Bean
 //    ApplicationRunner applicationRunner(Environment environment,
 //                                        @Value("${greetings-msg:Default hello}") String defaultValue,

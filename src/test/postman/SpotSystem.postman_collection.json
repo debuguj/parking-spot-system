@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "036be6c1-789f-48f2-89de-ec50e46022b2",
+		"name": "SpotSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/spots",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"vehiclePlate\":\"WCS12347\",\n\t\"driverType\":\"REGULAR\",\n\t\"beginDatetime\":\"2020-07-03T10:10:10.000\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/spots",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"spots"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/spots/WCS12347?finishDate=2020-07-03T08:00:00.000",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/spots/WCS12347?finishDate=2020-07-03T08:00:00.000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"spots",
+						"WCS12347"
+					],
+					"query": [
+						{
+							"key": "finishDate",
+							"value": "2020-07-03T08:00:00.000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/verification/WCS12347",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/verification/WCS12347",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verification",
+						"WCS12347"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/income/2020-07-03",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/income/2020-07-03",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"income",
+						"2020-07-03"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
