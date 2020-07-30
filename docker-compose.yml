@@ -10,17 +10,18 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/spots_system?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: user
     networks:
       - backend
+    command: ["./wait-for-it.sh", "db:3306", "prod", "python", "app.py"]
+
   db:
     image: mysql:5.7
     ports:
       - "3306:3306"
-    restart: always
     expose:
       - '3306'
     environment:
