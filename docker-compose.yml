@@ -33,6 +33,33 @@ services:
       - db-data:/var/lib/mysql
     networks:
       - backend
+
+  prometheus:
+    image: prom/prometheus:v2.19.3
+    container_name: 'prometheus'
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus/
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - '9090:9090'
+    expose:
+      - '9090'
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:7.1.0
+    container_name: 'grafana'
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./monitoring/grafana/provisioning/:/etc/grafana/provisioning/
+    depends_on:
+      - prometheus
+    networks:
+      - backend
+
 volumes:
   db-data:
 networks:
