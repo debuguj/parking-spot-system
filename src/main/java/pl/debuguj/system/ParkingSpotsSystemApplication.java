@@ -32,6 +32,26 @@ public class ParkingSpotsSystemApplication {
         this.archivedSpotRepo = archivedSpotRepo;
     }
 
+//    @Bean
+//    public ThreadBean threadBean(){
+//        return new ThreadBean();
+//    }
+//
+//    private static class ThreadBean{
+//        public ThreadBean() {
+//            Thread t1 = new Thread(() -> {
+//                while(true){
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            t1.setName("My Simple Thread Bean");
+//            t1.start();
+//        }
+//    }
     public static void main(String[] args) {
         SpringApplication.run(ParkingSpotsSystemApplication.class, args);
     }
