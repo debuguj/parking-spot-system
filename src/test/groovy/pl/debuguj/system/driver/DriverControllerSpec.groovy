@@ -126,7 +126,7 @@ class DriverControllerSpec extends Specification {
         spotRepo.delete(_ as String) >> Optional.of(spot)
 
         and: 'fee from archived repository'
-        archivedSpotRepo.save(_ as ArchivedSpot) >> Optional.of(fee)
+        archivedSpotRepo.save(_ as ArchivedSpot) >> Optional.of(archivedSpot)
 
         when: 'perform request'
         def results = mockMvc.perform(patch(uriStopMeter, spot.getVehiclePlate())

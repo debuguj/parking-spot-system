@@ -22,14 +22,14 @@ import java.time.LocalDateTime;
 @EnableConfigurationProperties(MyCustomProperties.class)
 public class ParkingSpotsSystemApplication {
 
-    @Autowired
-    private final SpotRepo spotRepo;
-    @Autowired
-    private final ArchivedSpotRepo archivedSpotRepo;
+//    @Autowired
+//    private final SpotRepo spotRepo;
+//    @Autowired
+//    private final ArchivedSpotRepo archivedSpotRepo;
 
-    public ParkingSpotsSystemApplication(SpotRepo spotRepo, ArchivedSpotRepo archivedSpotRepo) {
-        this.spotRepo = spotRepo;
-        this.archivedSpotRepo = archivedSpotRepo;
+    public ParkingSpotsSystemApplication() {
+//        this.spotRepo = spotRepo;
+//        this.archivedSpotRepo = archivedSpotRepo;
     }
 
 //    @Bean

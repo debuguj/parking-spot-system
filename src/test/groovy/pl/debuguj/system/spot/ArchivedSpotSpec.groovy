@@ -45,7 +45,6 @@ class ArchivedSpotSpec extends Specification {
 
         expect: 'should return valid and correct values'
         with(other) {
-            uuid == archivedSpot.uuid
             vehiclePlate == archivedSpot.vehiclePlate
             driverType == archivedSpot.driverType
             beginLocalDateTime == archivedSpot.beginLocalDateTime
@@ -67,7 +66,6 @@ class ArchivedSpotSpec extends Specification {
     def 'should returns no null params'() {
         expect:
         with(archivedSpot) {
-            uuid != null
             vehiclePlate != null
             driverType != null
             beginLocalDateTime != null

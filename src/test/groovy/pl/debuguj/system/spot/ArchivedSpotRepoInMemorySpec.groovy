@@ -36,7 +36,7 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
 
     def 'should return empty optional because of null archived spot value'() {
         when: 'save archived spot as null to repository'
-        Optional<Fee> opt = sut.save(null)
+        Optional<ArchivedSpot> opt = sut.save(null)
 
         then: 'should return empty optional'
         opt == Optional.empty()
@@ -44,21 +44,21 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
 
     def 'should save new archived spot to repository'() {
         when: 'save archived spot to repository'
-        Optional<Fee> opt = sut.save(archivedSpot)
+        Optional<ArchivedSpot> opt = sut.save(archivedSpot)
 
         then: 'should return not empty optional'
         opt != Optional.empty()
 
         and: 'values should be correct'
         with(archivedSpot) {
-            vehiclePlate == opt.get().plate
-            beginLocalDateTime == opt.get().startTime
-            endLocalDateTime == opt.get().stopTime
+            vehiclePlate == opt.get().vehiclePlate
+            beginLocalDateTime == opt.get().beginLocalDateTime
+            endLocalDateTime == opt.get().endLocalDateTime
          }
     }
 
     def 'should find all items by date'() {
-        given: 'Values loaded to sut'
+        given: 'values loaded to sut'
         values.forEach(sut.&save)
 
         when: "get values by date #startDate"

@@ -14,10 +14,11 @@ class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
 
     private static final Map<Long, ArchivedSpot> mapParkingSpots = new ConcurrentHashMap<>();
 
+    private Long counter = 0L;
     @Override
     public Optional<ArchivedSpot> save(final ArchivedSpot archivedSpot) {
         if (Objects.nonNull(archivedSpot)) {
-            mapParkingSpots.put(archivedSpot.getId(), archivedSpot);
+            mapParkingSpots.put(counter++, archivedSpot);
             return Optional.of(archivedSpot);
         }
         return Optional.empty();
