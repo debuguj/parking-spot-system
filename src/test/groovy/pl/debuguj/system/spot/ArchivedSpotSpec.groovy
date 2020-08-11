@@ -1,5 +1,9 @@
 package pl.debuguj.system.spot
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.util.SerializationUtils
 import pl.debuguj.system.exceptions.IncorrectFinishDateException
 import pl.debuguj.system.external.systems.CurrencyRate
@@ -11,7 +15,12 @@ import spock.lang.Unroll
 import javax.validation.Validation
 import java.time.LocalDateTime
 
+@DataJpaTest
+@AutoConfigureTestDatabase
 class ArchivedSpotSpec extends Specification {
+
+    @Autowired
+    TestEntityManager entityManager
 
     @Shared
     @Subject
@@ -21,20 +30,14 @@ class ArchivedSpotSpec extends Specification {
     @Shared
     def currencyRate = CurrencyRate.PLN
     @Shared
-    LocalDateTime defBeginDateTime
+    LocalDateTime defBeginDateTime = LocalDateTime.now()
     @Shared
-    LocalDateTime defEndDateTime
+    LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L)
     @Shared
-    String defaultVehiclePlate
-
-    def setup() {
-        defBeginDateTime = LocalDateTime.now()
-        defEndDateTime = LocalDateTime.now().plusHours(2L)
-        defaultVehiclePlate = 'WZE12345'
-        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, defEndDateTime)
-    }
+    String defaultVehiclePlate = 'WZE12345'
 
     def setupSpec() {
+        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, defEndDateTime)
         def vf = Validation.buildDefaultValidatorFactory()
         this.validator = vf.getValidator()
     }
@@ -52,6 +55,15 @@ class ArchivedSpotSpec extends Specification {
         }
     }
 
+    def 'should have id after save to database'(){
+        expect:
+            archivedSpot.getId() == null
+        when:
+            entityManager.persistAndFlush(archivedSpot)
+        then:
+            archivedSpot.getId() != null
+    }
+
     def 'should returns no error after valid input params'() {
         expect:
         with(archivedSpot) {
@@ -63,7 +75,7 @@ class ArchivedSpotSpec extends Specification {
         }
     }
 
-    def 'should returns no null params'() {
+    def 'should returns non null params'() {
         expect:
         with(archivedSpot) {
             vehiclePlate != null
@@ -89,9 +101,11 @@ class ArchivedSpotSpec extends Specification {
         def spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime)
 
         when: 'new archived spot created'
-        new ArchivedSpot(spot, invalidEndTimestamp)
+        def invalidArchivedSpot = new ArchivedSpot(spot, invalidEndTimestamp)
 
-        then: 'should throw an exception'
+        then: 'should be null'
+        invalidArchivedSpot == null
+        and: 'should throw an exception'
         thrown(IncorrectFinishDateException)
     }
 

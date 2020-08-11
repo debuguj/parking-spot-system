@@ -23,19 +23,19 @@ public final class Spot implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "vehicle_plate")
+    @Column(name = "vehicle_plate", columnDefinition="CHAR(8)", unique=true, nullable=false, updatable=false)
     @NotEmpty(message = "Vehicle plate cannot be empty.")
     @NotNull(message = "Vehicle plate must be provided.")
     @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$", message = "Invalid plate number.")
     private String vehiclePlate;
 
-    @Column(name = "driver_type")
+    @Column(name = "driver_type", columnDefinition="CHAR(7)", nullable=false, updatable=false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Driver type must be provided.")
     @DriverTypeSubSet(anyOf = {DriverType.REGULAR, DriverType.VIP})
     private DriverType driverType;
 
-    @Column(name = "begin_datetime")
+    @Column(name = "begin_datetime", nullable=false, updatable=false)
     @NotNull(message = "Begin datetime must be provided.")
     private LocalDateTime beginDatetime;
 
@@ -50,5 +50,14 @@ public final class Spot implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(vehiclePlate);
+    }
+
+    @Override
+    public String toString() {
+        return "Spot{" +
+                "vehiclePlate='" + vehiclePlate + '\'' +
+                ", driverType=" + driverType +
+                ", beginDatetime=" + beginDatetime +
+                '}';
     }
 }

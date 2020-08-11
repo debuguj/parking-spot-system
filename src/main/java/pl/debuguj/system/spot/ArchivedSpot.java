@@ -33,19 +33,20 @@ public final class ArchivedSpot implements Serializable {
             name = "native",
             strategy = "native"
     )
+    @Column(name = "id", unique=true, nullable=false, updatable=false)
     private Long id;
 
-    @Column(name = "vehicle_plate")
+    @Column(name = "vehicle_plate", columnDefinition="CHAR(8)", unique=true, nullable=false, updatable=false)
     private String vehiclePlate;
 
-    @Column(name = "driver_type")
+    @Column(name = "driver_type", columnDefinition="CHAR(7)", nullable=false, updatable=false)
     @Enumerated(EnumType.STRING)
     private DriverType driverType;
 
-    @Column(name = "begin_datetime")
+    @Column(name = "begin_datetime", nullable=false, updatable=false)
     private LocalDateTime beginLocalDateTime;
 
-    @Column(name = "end_datetime")
+    @Column(name = "end_datetime", nullable=false, updatable=false)
     private LocalDateTime endLocalDateTime;
 
     public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
@@ -78,6 +79,17 @@ public final class ArchivedSpot implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "ArchivedSpot{" +
+                "id=" + id +
+                ", vehiclePlate='" + vehiclePlate + '\'' +
+                ", driverType=" + driverType +
+                ", beginLocalDateTime=" + beginLocalDateTime +
+                ", endLocalDateTime=" + endLocalDateTime +
+                '}';
     }
 
     public Optional<BigDecimal> getFee() {

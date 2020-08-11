@@ -31,6 +31,7 @@ class SpotSpec extends Specification {
         validator = vf.getValidator()
     }
 
+
     def 'should be serialized correctly'() {
         given: "after #spot serialization to #other object"
         def other = (Spot) SerializationUtils.deserialize(SerializationUtils.serialize(spot))
