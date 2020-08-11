@@ -44,7 +44,7 @@ public final class Spot implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Spot)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Spot other = (Spot) o;
         return Objects.equals(vehiclePlate, other.getVehiclePlate());
     }
