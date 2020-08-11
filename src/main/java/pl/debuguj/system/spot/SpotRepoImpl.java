@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import java.util.Objects;
 import java.util.Optional;
 
-@Profile("prod")
+@Profile({"prod", "default"})
 @Transactional
 @Repository
 public class SpotRepoImpl implements SpotRepo {

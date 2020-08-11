@@ -21,6 +21,9 @@ import java.util.Optional;
 @Table(name = "archived_spot")
 @Entity
 public final class ArchivedSpot implements Serializable {
+
+    private static final long serialVersionUID = 2L;
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.AUTO,
@@ -68,8 +71,8 @@ public final class ArchivedSpot implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ArchivedSpot that = (ArchivedSpot) o;
-        return id.equals(that.id);
+        ArchivedSpot other = (ArchivedSpot) o;
+        return Objects.equals(id, other.getId());
     }
 
     @Override

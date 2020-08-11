@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Profile("prod")
+@Profile({"prod", "default"})
 @Transactional
 @Repository
 public class ArchivedSpotRepoImpl implements ArchivedSpotRepo {
