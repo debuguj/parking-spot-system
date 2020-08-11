@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Table(name= "spots")
 @Entity
 public final class Spot implements Serializable {
@@ -26,19 +27,16 @@ public final class Spot implements Serializable {
     @NotEmpty(message = "Vehicle plate cannot be empty.")
     @NotNull(message = "Vehicle plate must be provided.")
     @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$", message = "Invalid plate number.")
-    @Getter
     private String vehiclePlate;
 
     @Column(name = "driver_type")
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Driver type must be provided.")
     @DriverTypeSubSet(anyOf = {DriverType.REGULAR, DriverType.VIP})
-    @Getter
     private DriverType driverType;
 
     @Column(name = "begin_datetime")
     @NotNull(message = "Begin datetime must be provided.")
-    @Getter
     private LocalDateTime beginDatetime;
 
     @Override
