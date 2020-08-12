@@ -20,18 +20,28 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java-version>1.8</java-version>
+        <spock-version>1.2-groovy-2.4</spock-version>
+        <groovy-version>2.4.11</groovy-version>
+        <lombok-version>1.18.12</lombok-version>
+        <gmaven.plugin-version>1.6</gmaven.plugin-version>
+        <spring.boot.starter.web-version>2.2.5.RELEASE</spring.boot.starter.web-version>
+        <spring.boot.starter.actuator-version>2.2.5.RELEASE</spring.boot.starter.actuator-version>
+        <spring.boot.starter.jpa-version>2.2.5.RELEASE</spring.boot.starter.jpa-version>
+        <spring.boot.starter.test-version>2.2.5.RELEASE</spring.boot.starter.test-version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.starter.web-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>${spring.boot.starter.actuator-version}</version>
         </dependency>
 
         <dependency>
@@ -42,7 +52,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.2.5.RELEASE</version>
+            <version>${spring.boot.starter.test-version}</version>
             <scope>test</scope>
 <!--            <exclusions>-->
 <!--                <exclusion>-->
@@ -55,7 +65,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>${lombok-version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -63,21 +73,22 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.4.11</version>
+            <version>${groovy-version}</version>
+            <scope>test</scope>
             <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
-            <version>1.2-groovy-2.4</version>
+            <version>${spock-version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-spring</artifactId>
-            <version>1.2-groovy-2.4</version>
+            <version>${spock-version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -85,6 +96,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.boot.starter.jpa-version}</version>
         </dependency>
 
         <dependency>
@@ -125,7 +137,7 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.6</version>
+                <version>${gmaven.plugin-version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -145,7 +157,6 @@
                     </testSources>
                 </configuration>
             </plugin>
-
 		</plugins>
 	</build>
 </project>

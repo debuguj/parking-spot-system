@@ -16,7 +16,6 @@ import javax.validation.Validation
 import java.time.LocalDateTime
 
 @DataJpaTest
-@AutoConfigureTestDatabase
 class ArchivedSpotSpec extends Specification {
 
     @Autowired

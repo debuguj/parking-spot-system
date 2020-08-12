@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Repository
 class SpotRepoInMemory implements SpotRepo {
 
-    //TODO: add parking capacity limit
     private final Map<String, Spot> mapParkingSpots = new ConcurrentHashMap<>();
 
     @Override
