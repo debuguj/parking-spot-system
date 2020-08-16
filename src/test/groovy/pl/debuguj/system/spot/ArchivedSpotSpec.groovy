@@ -1,7 +1,6 @@
 package pl.debuguj.system.spot
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.util.SerializationUtils
@@ -13,32 +12,114 @@ import spock.lang.Subject
 import spock.lang.Unroll
 
 import javax.validation.Validation
+import javax.validation.Validator
 import java.time.LocalDateTime
 
 @DataJpaTest
 class ArchivedSpotSpec extends Specification {
 
-    @Autowired
-    TestEntityManager entityManager
+    @Shared @Subject ArchivedSpot archivedSpot
 
-    @Shared
-    @Subject
-    ArchivedSpot archivedSpot
-    @Shared
-    def validator
-    @Shared
-    def currencyRate = CurrencyRate.PLN
-    @Shared
-    LocalDateTime defBeginDateTime = LocalDateTime.now()
-    @Shared
-    LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L)
-    @Shared
-    String defaultVehiclePlate = 'WZE12345'
+    @Autowired TestEntityManager entityManager
+    @Shared Validator validator
+
+    @Shared CurrencyRate currencyRate = CurrencyRate.PLN
+    @Shared LocalDateTime defBeginDateTime = LocalDateTime.now()
+    @Shared LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L)
+    @Shared String defaultVehiclePlate = 'WZE12345'
+
+    @Shared Set<ArchivedSpot> archivedSpots = new HashSet<>()
 
     def setupSpec() {
-        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, defEndDateTime)
         def vf = Validation.buildDefaultValidatorFactory()
         this.validator = vf.getValidator()
+    }
+
+    def setup(){
+        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, defEndDateTime)
+        archivedSpots.add(archivedSpot)
+    }
+
+    def cleanup(){
+        archivedSpots.removeAll()
+    }
+
+    def 'given archived spot should be stored in set'(){
+        expect: 'archived spot in set'
+        archivedSpots.contains(archivedSpot)
+    }
+
+    def 'after persist to database archived spot should have id'(){
+        expect: 'empty id in archived spot object'
+        !archivedSpot.getId()
+
+        when: 'persist to database'
+        entityManager.persistAndFlush(archivedSpot)
+
+        then: 'should have id from database'
+        archivedSpot.getId()
+
+        and: 'archived spot should be found in set'
+        archivedSpots.contains(archivedSpot)
+    }
+
+    def 'merge should be succeed'(){
+        when: 'merge archived spot'
+        ArchivedSpot mergedArchivedSpot = entityManager.merge(archivedSpot)
+
+        and: 'flush persistent context'
+        entityManager.flush()
+
+        then: 'set contains archived spot should contains default archived spot'
+        archivedSpots.contains(mergedArchivedSpot)
+    }
+
+    def 'archived spots should persist in database'(){
+        when: 'persist to database'
+        entityManager.persistAndFlush(archivedSpot)
+
+        and: 'archived spot was found'
+        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+
+        and: 'flush persistent context'
+        entityManager.flush()
+
+        then: 'set contains archived spot should contains default archived spot'
+        archivedSpots.contains(foundArchivedSpot)
+    }
+
+    def 'check detached archived spot'(){
+        when: 'persist to database'
+        entityManager.persistAndFlush(archivedSpot)
+
+        and: 'archived spot was found'
+        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+
+        and: 'flush persistent context'
+        entityManager.flush()
+
+        then: 'set contains archived spot should contains default archived spot'
+        archivedSpots.contains(foundArchivedSpot)
+
+        when: 'removing from set'
+        archivedSpots.remove(foundArchivedSpot)
+
+        then: 'set should not contains archived spot'
+        !archivedSpots.contains(foundArchivedSpot)
+    }
+
+    def 'check finding and removing'(){
+        when: 'persist to database'
+        entityManager.persistAndFlush(archivedSpot)
+
+        and: 'archived spot was found'
+        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+
+        and: 'detached object'
+        entityManager.detach(foundArchivedSpot)
+
+        then: 'set contains archived spot should contains default archived spot'
+        archivedSpots.contains(foundArchivedSpot)
     }
 
     def 'should be serialized correctly'() {
@@ -54,17 +135,8 @@ class ArchivedSpotSpec extends Specification {
         }
     }
 
-    def 'should have id after save to database'(){
-        expect:
-            archivedSpot.getId() == null
-        when:
-            entityManager.persistAndFlush(archivedSpot)
-        then:
-            archivedSpot.getId() != null
-    }
-
     def 'should returns no error after valid input params'() {
-        expect:
+        expect: 'valid parameters'
         with(archivedSpot) {
             vehiclePlate == defaultVehiclePlate
             driverType == DriverType.REGULAR
@@ -75,18 +147,19 @@ class ArchivedSpotSpec extends Specification {
     }
 
     def 'should returns non null params'() {
-        expect:
+        expect: 'not null params'
         with(archivedSpot) {
-            vehiclePlate != null
-            driverType != null
-            beginLocalDateTime != null
-            endLocalDateTime != null
+            vehiclePlate
+            driverType
+            beginLocalDateTime
+            endLocalDateTime
         }
     }
 
     def 'should return empty optional for fee because of null finish date'() {
         given: 'archive spot with invalid finish date'
-        def invalidArchivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, null)
+        def invalidArchivedSpot = new ArchivedSpot(
+                defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, null)
 
         expect: 'empty optional'
         Optional.empty() == invalidArchivedSpot.getFee(currencyRate)
@@ -103,22 +176,25 @@ class ArchivedSpotSpec extends Specification {
         def invalidArchivedSpot = new ArchivedSpot(spot, invalidEndTimestamp)
 
         then: 'should be null'
-        invalidArchivedSpot == null
+        !invalidArchivedSpot
+
         and: 'should throw an exception'
-        thrown(IncorrectFinishDateException)
+        IncorrectFinishDateException e = thrown()
+        !e.cause
     }
 
     @Unroll
-    def "should return a correct #fee for REGULAR driver and given default currency rate PLN"() {
+    def "should return fee equals to #assumedFee for REGULAR driver and given default currency rate PLN"() {
         given: 'archivedSpot with valid input'
         def invalidSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR,
                 LocalDateTime.parse(beginDate), LocalDateTime.parse(endDate))
 
-        expect: 'correct value of fee'
-        invalidSpot.getFee(currencyRate).ifPresent({ f -> new BigDecimal(fee) == f })
+        expect: 'correct fee value'
+        invalidSpot.getFee(currencyRate)
+                .ifPresent({ estimatedFee -> compareValues(assumedFee, estimatedFee)})
 
         where: "valid #fee for period between #beginDate and #endDate"
-        beginDate             | endDate               || fee
+        beginDate             | endDate               || assumedFee
         '2020-06-12T11:15:48' | '2020-06-12T11:35:12' || 1.0
         '2020-06-12T11:15:48' | '2020-06-12T12:35:12' || 3.0
         '2020-06-12T11:15:48' | '2020-06-12T13:35:12' || 7.0
@@ -129,21 +205,26 @@ class ArchivedSpotSpec extends Specification {
     }
 
     @Unroll
-    def "should return a correct #fee for VIP driver and given default currency rate"() {
+    def "should return fee equals to #assumedFee for period #beginDate - #endDate for VIP driver and given default currency rate"() {
         given: 'archived spot with valid input'
         ArchivedSpot invalidSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.VIP,
                 LocalDateTime.parse(beginDate), LocalDateTime.parse(endDate))
 
         expect: 'correct value of fee'
-        invalidSpot.getFee(currencyRate).ifPresent({ f -> new BigDecimal(fee) == f })
+        invalidSpot.getFee(currencyRate).ifPresent({
+                    estimatedFee -> compareValues(assumedFee, estimatedFee)})
 
-        where: "valid #fee between #beginDate and #endDate"
-        beginDate             | endDate               || fee
+        where: "valid #assumedFee between #beginDate and #endDate"
+        beginDate             | endDate               || assumedFee
         '2020-10-12T11:15:48' | '2020-10-12T11:35:12' || 0.0
         '2020-10-12T11:15:48' | '2020-10-12T12:35:12' || 2.0
         '2020-10-12T11:15:48' | '2020-10-12T13:35:12' || 5.0
         '2020-10-12T11:15:48' | '2020-10-12T16:35:12' || 26.4
         '2020-10-12T00:15:48' | '2020-10-12T15:35:12' || 1747.6
         '2020-10-12T11:15:48' | '2020-10-13T11:14:12' || 44887.0
+    }
+
+    def compareValues(BigDecimal assumedFee, BigDecimal estimatedFee){
+        assert assumedFee == estimatedFee
     }
 }

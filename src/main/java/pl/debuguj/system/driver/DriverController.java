@@ -2,8 +2,6 @@ package pl.debuguj.system.driver;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -11,16 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.debuguj.system.exceptions.VehicleActiveInDbException;
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException;
-import pl.debuguj.system.spot.ArchivedSpot;
-import pl.debuguj.system.spot.ArchivedSpotRepo;
-import pl.debuguj.system.spot.Spot;
-import pl.debuguj.system.spot.SpotRepo;
+import pl.debuguj.system.spot.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Created by GB on 07.03.20.

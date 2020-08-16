@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,6 +50,9 @@ public final class ArchivedSpot implements Serializable {
     @Column(name = "end_datetime", nullable=false, updatable=false)
     private LocalDateTime endLocalDateTime;
 
+    @Column(name = "uuid", columnDefinition = "BINARY(16)", nullable=false, updatable=false, unique=true)
+    private UUID uuid = UUID.randomUUID();
+
     public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
         Objects.requireNonNull(spot, "Spot cannot be null");
 
@@ -73,12 +77,12 @@ public final class ArchivedSpot implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArchivedSpot other = (ArchivedSpot) o;
-        return Objects.equals(id, other.getId());
+        return Objects.equals(uuid, other.getUuid());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(uuid);
     }
 
     @Override

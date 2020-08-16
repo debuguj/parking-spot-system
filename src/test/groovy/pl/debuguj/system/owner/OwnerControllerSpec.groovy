@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MockMvc
 import pl.debuguj.system.external.systems.CurrencyRate
 import pl.debuguj.system.external.systems.CurrencyRateHandler
 import pl.debuguj.system.spot.ArchivedSpot
-import pl.debuguj.system.spot.ArchivedSpotRepo
+import pl.debuguj.system.spot.BaseArchivedSpotRepo
 import pl.debuguj.system.spot.DriverType
 import pl.debuguj.system.spot.Spot
 import spock.lang.Shared
@@ -37,7 +37,7 @@ class OwnerControllerSpec extends Specification {
     @Autowired
     private ObjectMapper objectMapper
     @SpringBean
-    private ArchivedSpotRepo archivedSpotRepo = Stub()
+    private BaseArchivedSpotRepo archivedSpotRepo = Stub()
     @SpringBean
     private CurrencyRateHandler currencyRateHandler = Stub()
 

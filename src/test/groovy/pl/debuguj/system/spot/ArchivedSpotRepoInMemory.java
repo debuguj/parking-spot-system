@@ -1,7 +1,6 @@
 package pl.debuguj.system.spot;
 
 import org.springframework.stereotype.Repository;
-import pl.debuguj.system.driver.Fee;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +24,7 @@ class ArchivedSpotRepoInMemory implements ArchivedSpotRepo {
     }
 
     @Override
-    public List<ArchivedSpot> getAllByDay(final LocalDate date) {
+    public List<ArchivedSpot> getArchivedSpotByDate(final LocalDate date) {
         return mapParkingSpots.values()
                 .stream()
                 .filter(as -> checkItem(date, as))

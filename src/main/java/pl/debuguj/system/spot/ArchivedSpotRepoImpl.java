@@ -2,7 +2,6 @@ package pl.debuguj.system.spot;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
-import pl.debuguj.system.driver.Fee;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Profile({"prod", "default"})
+@Profile({"prod","test", "default"})
 @Transactional
 @Repository
 public class ArchivedSpotRepoImpl implements ArchivedSpotRepo {
@@ -21,7 +20,7 @@ public class ArchivedSpotRepoImpl implements ArchivedSpotRepo {
     private EntityManager entityManager;
 
     @Override
-    public Optional<ArchivedSpot> save(final ArchivedSpot archivedSpot) {
+    public Optional<ArchivedSpot> save(ArchivedSpot archivedSpot) {
         if(Objects.nonNull(archivedSpot)){
             entityManager.persist(archivedSpot);
             return Optional.of(archivedSpot);
@@ -30,8 +29,9 @@ public class ArchivedSpotRepoImpl implements ArchivedSpotRepo {
     }
 
     @Override
-    public List<ArchivedSpot> getAllByDay(final LocalDate date) {
-        String hql = "FROM archived_spot as arsp ORDER BY arsp.articleId";
+    public List<ArchivedSpot> getArchivedSpotByDate(final LocalDate date) {
+        String hql = "FROM archived_spot as arsp ORDER BY arsp.id";
         return (List<ArchivedSpot>) entityManager.createQuery(hql).getResultList();
     }
+
 }

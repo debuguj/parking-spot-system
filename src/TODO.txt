@@ -1,4 +1,5 @@
 BASIC:
+- remove domain model from REST
 - add security
 - add hateoas
 - hexagonale architecture, ddd

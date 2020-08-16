@@ -8,29 +8,22 @@ import spock.lang.Unroll
 
 import javax.validation.ConstraintViolation
 import javax.validation.Validation
+import javax.validation.Validator
 import java.time.LocalDateTime
 
 class SpotSpec extends Specification {
 
-    @Subject
-    @Shared
-    Spot spot
+    @Subject @Shared Spot spot
 
-    @Shared
-    def validator
-    @Shared
-    LocalDateTime defaultDateTime
-    @Shared
-    def defaultVehiclePlate
+    @Shared Validator validator
+    @Shared LocalDateTime defaultDateTime = LocalDateTime.now()
+    @Shared String defaultVehiclePlate = 'WZE12345'
 
     def setupSpec() {
-        defaultDateTime = LocalDateTime.now()
-        defaultVehiclePlate = 'WZE12345'
         spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime)
         def vf = Validation.buildDefaultValidatorFactory()
         validator = vf.getValidator()
     }
-
 
     def 'should be serialized correctly'() {
         given: "after #spot serialization to #other object"
@@ -94,5 +87,4 @@ class SpotSpec extends Specification {
         plate << ['e12345', '', ' ', '     ', '12345', 'qeee12345', 'vehiclePlate', 'qwe123456',
                   'qwe123', 'E12345', '12345', 'QEEE12345', 'vehiclePlate123', 'QWE123456', 'QWE123']
     }
-
 }

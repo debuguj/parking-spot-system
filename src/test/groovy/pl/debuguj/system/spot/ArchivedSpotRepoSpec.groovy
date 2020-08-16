@@ -1,6 +1,9 @@
 package pl.debuguj.system.spot
 
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Subject
@@ -9,23 +12,20 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ArchivedSpotRepoInMemorySpec extends Specification {
+@DataJpaTest
+class ArchivedSpotRepoSpec extends Specification{
 
-    @Subject
-    @Shared
-    BaseArchivedSpotRepo sut = new ArchivedSpotRepoInMemory()
+    @Subject @Shared
+    ArchivedSpotRepo sut
 
-    @Shared
-    LocalDateTime defBeginDateTime = LocalDateTime.now()
-    @Shared
-    LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L)
-    @Shared
-    ArchivedSpot archivedSpot
+    @Autowired TestEntityManager entityManager
 
-    @Shared
-    LocalDate startDate = LocalDate.parse('2020-06-25', DateTimeFormatter.ofPattern('yyyy-MM-dd'))
-    @Shared
-    LocalDateTime ldt = startDate.atStartOfDay()
+    @Shared LocalDateTime defBeginDateTime = LocalDateTime.now()
+    @Shared LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L)
+    @Shared ArchivedSpot archivedSpot
+
+    @Shared LocalDate startDate = LocalDate.parse('2020-06-25', DateTimeFormatter.ofPattern('yyyy-MM-dd'))
+    @Shared LocalDateTime ldt = startDate.atStartOfDay()
 
     def setupSpec() {
         archivedSpot = new ArchivedSpot('WZE12345', DriverType.REGULAR, defBeginDateTime, defEndDateTime)
@@ -51,7 +51,7 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
             vehiclePlate == opt.get().vehiclePlate
             beginLocalDateTime == opt.get().beginLocalDateTime
             endLocalDateTime == opt.get().endLocalDateTime
-         }
+        }
     }
 
     def 'should find all items by date'() {
@@ -83,4 +83,5 @@ class ArchivedSpotRepoInMemorySpec extends Specification {
                   new ArchivedSpot("EDC99999", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusDays(1L).plusHours(2L)),
                   new ArchivedSpot("FDR99998", DriverType.REGULAR, ldt.plusDays(1L), ldt.plusDays(1L).plusHours(1L))]
     }
+
 }

@@ -39,7 +39,7 @@ class DriverControllerSpec extends Specification {
     @SpringBean
     SpotRepo spotRepo = Stub()
     @SpringBean
-    ArchivedSpotRepo archivedSpotRepo = Stub()
+    BaseArchivedSpotRepo archivedSpotRepo = Stub()
 
     @Shared
     Spot spot
