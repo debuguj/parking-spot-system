@@ -1,5 +1,8 @@
 package pl.debuguj.system.spot
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.util.SerializationUtils
 import spock.lang.Shared
 import spock.lang.Specification
@@ -11,18 +14,110 @@ import javax.validation.Validation
 import javax.validation.Validator
 import java.time.LocalDateTime
 
+@DataJpaTest
 class SpotSpec extends Specification {
 
     @Subject @Shared Spot spot
 
+    @Autowired TestEntityManager entityManager
     @Shared Validator validator
+
     @Shared LocalDateTime defaultDateTime = LocalDateTime.now()
     @Shared String defaultVehiclePlate = 'WZE12345'
 
+    @Shared Set<ArchivedSpot> spots = new HashSet<>()
+
     def setupSpec() {
-        spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime)
         def vf = Validation.buildDefaultValidatorFactory()
         validator = vf.getValidator()
+    }
+
+    def setup(){
+        spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defaultDateTime)
+        spots.add(spot)
+    }
+
+    def cleanup(){
+        spots.removeAll()
+    }
+
+    def 'given spot should be stored in set'(){
+        expect: 'spot in set'
+        spots.contains(spot)
+    }
+
+    def 'merge should be succeed'(){
+        when: 'merge archived spot'
+        Spot mergedSpot = entityManager.merge(spot)
+
+        and: 'flush persistent context'
+        entityManager.flush()
+
+        then: 'set contains spot should contains default spot'
+        spots.contains(mergedSpot)
+    }
+
+    def 'spot should persist in database'(){
+        when: 'persist to database'
+        entityManager.persistAndFlush(spot)
+
+        and: 'spot was found'
+        Spot foundSpot = entityManager.find(Spot.class, spot.getVehiclePlate())
+
+        and: 'flush persistent context'
+        entityManager.flush()
+
+        then: 'set contains spot should contains default spot'
+        spots.contains(foundSpot)
+    }
+
+    def 'check detached spot'(){
+        when: 'persist to database'
+        entityManager.persistAndFlush(spot)
+
+        and: 'spot was found'
+        Spot found = entityManager.find(Spot.class, spot.getVehiclePlate())
+
+        and: 'flush persistent context'
+        entityManager.flush()
+
+        then: 'set contains spot should contains default spot'
+        spots.contains(found)
+
+        when: 'removing from set'
+        spots.remove(found)
+
+        then: 'set should not contains spot'
+        !spots.contains(found)
+    }
+
+    def 'check finding and detaching'(){
+        when: 'persist to database'
+        entityManager.persistAndFlush(spot)
+
+        and: 'spot was found'
+        Spot found = entityManager.find(Spot.class, spot.getVehiclePlate())
+
+        and: 'detached object'
+        entityManager.detach(found)
+
+        then: 'set contains archived spot should contains default archived spot'
+        spots.contains(found)
+    }
+
+    def 'validation of saved spot'(){
+        when: 'save to database'
+        entityManager.persistAndFlush(spot)
+
+        and: 'archived spot was found'
+        Spot found = entityManager.find(Spot.class, spot.getVehiclePlate())
+
+        then: 'parameters should be valid'
+        with(found){
+            vehiclePlate == found.getVehiclePlate()
+            driverType == found.getDriverType()
+            beginDatetime == found.getBeginDatetime()
+        }
     }
 
     def 'should be serialized correctly'() {

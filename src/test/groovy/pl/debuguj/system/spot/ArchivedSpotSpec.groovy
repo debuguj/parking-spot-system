@@ -74,7 +74,7 @@ class ArchivedSpotSpec extends Specification {
         archivedSpots.contains(mergedArchivedSpot)
     }
 
-    def 'archived spots should persist in database'(){
+    def 'archived spot should persist in database'(){
         when: 'persist to database'
         entityManager.persistAndFlush(archivedSpot)
 
@@ -108,7 +108,7 @@ class ArchivedSpotSpec extends Specification {
         !archivedSpots.contains(foundArchivedSpot)
     }
 
-    def 'check finding and removing'(){
+    def 'check finding and detaching'(){
         when: 'persist to database'
         entityManager.persistAndFlush(archivedSpot)
 
@@ -120,6 +120,23 @@ class ArchivedSpotSpec extends Specification {
 
         then: 'set contains archived spot should contains default archived spot'
         archivedSpots.contains(foundArchivedSpot)
+    }
+
+    def 'validation of saved archived spot'(){
+        when: 'save to database'
+        entityManager.persistAndFlush(archivedSpot)
+
+        and: 'archived spot was found'
+        ArchivedSpot found = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+
+        then: 'parameters should be valid'
+        with(archivedSpot){
+            vehiclePlate == found.getVehiclePlate()
+            driverType == found.getDriverType()
+            beginLocalDateTime == found.getBeginLocalDateTime()
+            endLocalDateTime == found.getEndLocalDateTime()
+            uuid == found.getUuid()
+        }
     }
 
     def 'should be serialized correctly'() {

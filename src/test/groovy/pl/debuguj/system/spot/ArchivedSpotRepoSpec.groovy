@@ -2,6 +2,7 @@ package pl.debuguj.system.spot
 
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import spock.lang.Shared
@@ -13,10 +14,10 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @DataJpaTest
+@AutoConfigureTestDatabase
 class ArchivedSpotRepoSpec extends Specification{
 
-    @Subject @Shared
-    ArchivedSpotRepo sut
+    @Autowired ArchivedSpotRepo sut
 
     @Autowired TestEntityManager entityManager
 
