@@ -24,8 +24,8 @@ class ArchivedSpotSpec extends Specification {
     @Shared Validator validator
 
     @Shared CurrencyRate currencyRate = CurrencyRate.PLN
-    @Shared LocalDateTime defBeginDateTime = LocalDateTime.now()
-    @Shared LocalDateTime defEndDateTime = LocalDateTime.now().plusHours(2L)
+    @Shared LocalDateTime defBeginTimestamp = LocalDateTime.now()
+    @Shared LocalDateTime defEndTimestamp = LocalDateTime.now().plusHours(2L)
     @Shared String defaultVehiclePlate = 'WZE12345'
 
     @Shared Set<ArchivedSpot> archivedSpots = new HashSet<>()
@@ -36,7 +36,7 @@ class ArchivedSpotSpec extends Specification {
     }
 
     def setup(){
-        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, defEndDateTime)
+        archivedSpot = new ArchivedSpot(defaultVehiclePlate, DriverType.REGULAR, defBeginTimestamp, defEndTimestamp)
         archivedSpots.add(archivedSpot)
     }
 
@@ -133,8 +133,8 @@ class ArchivedSpotSpec extends Specification {
         with(archivedSpot){
             vehiclePlate == found.getVehiclePlate()
             driverType == found.getDriverType()
-            beginLocalDateTime == found.getBeginLocalDateTime()
-            endLocalDateTime == found.getEndLocalDateTime()
+            beginTimestamp == found.getBeginTimestamp()
+            endTimestamp == found.getEndTimestamp()
             uuid == found.getUuid()
         }
     }
@@ -147,8 +147,8 @@ class ArchivedSpotSpec extends Specification {
         with(other) {
             vehiclePlate == archivedSpot.vehiclePlate
             driverType == archivedSpot.driverType
-            beginLocalDateTime == archivedSpot.beginLocalDateTime
-            endLocalDateTime == archivedSpot.endLocalDateTime
+            beginTimestamp == archivedSpot.beginTimestamp
+            endTimestamp == archivedSpot.endTimestamp
         }
     }
 
@@ -158,8 +158,8 @@ class ArchivedSpotSpec extends Specification {
             vehiclePlate == defaultVehiclePlate
             driverType == DriverType.REGULAR
             driverType != DriverType.VIP
-            beginLocalDateTime == defBeginDateTime
-            endLocalDateTime == defEndDateTime
+            beginTimestamp == defBeginTimestamp
+            endTimestamp == defEndTimestamp
         }
     }
 
@@ -168,15 +168,15 @@ class ArchivedSpotSpec extends Specification {
         with(archivedSpot) {
             vehiclePlate
             driverType
-            beginLocalDateTime
-            endLocalDateTime
+            beginTimestamp
+            endTimestamp
         }
     }
 
     def 'should return empty optional for fee because of null finish date'() {
         given: 'archive spot with invalid finish date'
         def invalidArchivedSpot = new ArchivedSpot(
-                defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime, null)
+                defaultVehiclePlate, DriverType.REGULAR, defBeginTimestamp, null)
 
         expect: 'empty optional'
         Optional.empty() == invalidArchivedSpot.getFee(currencyRate)
@@ -184,10 +184,10 @@ class ArchivedSpotSpec extends Specification {
 
     def 'should throw an exception because finish date is before start date'() {
         given: 'incorrect end timestamp'
-        def invalidEndTimestamp = defBeginDateTime.minusHours(2L)
+        def invalidEndTimestamp = defBeginTimestamp.minusHours(2L)
 
         and: 'simple spot for test'
-        def spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defBeginDateTime)
+        def spot = new Spot(defaultVehiclePlate, DriverType.REGULAR, defBeginTimestamp)
 
         when: 'new archived spot created'
         def invalidArchivedSpot = new ArchivedSpot(spot, invalidEndTimestamp)

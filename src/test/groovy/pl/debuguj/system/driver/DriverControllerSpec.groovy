@@ -39,7 +39,7 @@ class DriverControllerSpec extends Specification {
     @SpringBean
     SpotRepo spotRepo = Stub()
     @SpringBean
-    BaseArchivedSpotRepo archivedSpotRepo = Stub()
+    ArchivedSpotRepo archivedSpotRepo = Stub()
 
     @Shared
     Spot spot
@@ -123,7 +123,7 @@ class DriverControllerSpec extends Specification {
 
     def 'should return correct fee'() {
         given: 'return optional of spot'
-        spotRepo.delete(_ as String) >> Optional.of(spot)
+        spotRepo.deleteByVehiclePlate(_ as String) >> Optional.of(spot)
 
         and: 'fee from archived repository'
         archivedSpotRepo.save(_ as ArchivedSpot) >> Optional.of(archivedSpot)

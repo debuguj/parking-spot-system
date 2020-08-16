@@ -48,7 +48,7 @@ class OperatorControllerSpec  extends Specification {
 
     def 'should return VehicleNotFoundException because vehicle is not active'(){
         given: 'exception returned by findVehicleByPlate method'
-        spotRepo.findVehicleByPlate(_ as String) >> { throw new VehicleNotFoundException('WZE12345') }
+        spotRepo.findByVehiclePlate(_ as String) >> { throw new VehicleNotFoundException('WZE12345') }
 
         when: 'perform request'
         def results = mockMvc.perform(get(uriCheckVehicle, vehiclePlate)
@@ -63,7 +63,7 @@ class OperatorControllerSpec  extends Specification {
 
     def 'should return status OK because vehicle is active in db'(){
         given: 'exception returned by findVehicleByPlate method'
-        spotRepo.findVehicleByPlate(_ as String) >> Optional.of(spot)
+        spotRepo.findByVehiclePlate(_ as String) >> Optional.of(spot)
 
         when: 'perform request'
         def results = mockMvc.perform(get(uriCheckVehicle, vehiclePlate)

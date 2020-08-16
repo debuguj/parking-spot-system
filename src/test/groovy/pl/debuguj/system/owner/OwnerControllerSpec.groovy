@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc
 import pl.debuguj.system.external.systems.CurrencyRate
 import pl.debuguj.system.external.systems.CurrencyRateHandler
 import pl.debuguj.system.spot.ArchivedSpot
+import pl.debuguj.system.spot.ArchivedSpotRepo
 import pl.debuguj.system.spot.BaseArchivedSpotRepo
 import pl.debuguj.system.spot.DriverType
 import pl.debuguj.system.spot.Spot
@@ -37,7 +38,7 @@ class OwnerControllerSpec extends Specification {
     @Autowired
     private ObjectMapper objectMapper
     @SpringBean
-    private BaseArchivedSpotRepo archivedSpotRepo = Stub()
+    private ArchivedSpotRepo archivedSpotRepo = Stub()
     @SpringBean
     private CurrencyRateHandler currencyRateHandler = Stub()
 
@@ -68,7 +69,7 @@ class OwnerControllerSpec extends Specification {
 
     def 'should return income for one vehicle'(){
         given: 'one archived spot for test'
-        archivedSpotRepo.getAllByDay(_ as LocalDate) >> createArchivedSpot(spot)
+        archivedSpotRepo.findAllByBeginTimestamp(_ as LocalDateTime) >> createArchivedSpot(spot)
 
         and: 'PLN as default currency and rate'
         currencyRateHandler.getCurrencyRate() >> CurrencyRate.PLN

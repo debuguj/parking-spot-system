@@ -18,7 +18,6 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Table(name = "archived_spot")
 @Entity
 public final class ArchivedSpot implements Serializable {
@@ -34,42 +33,48 @@ public final class ArchivedSpot implements Serializable {
             name = "native",
             strategy = "native"
     )
+    @Getter
     @Column(name = "id", unique=true, nullable=false, updatable=false)
     private Long id;
 
+    @Getter
     @Column(name = "vehicle_plate", columnDefinition="CHAR(8)", unique=true, nullable=false, updatable=false)
     private String vehiclePlate;
 
+    @Getter
     @Column(name = "driver_type", columnDefinition="CHAR(7)", nullable=false, updatable=false)
     @Enumerated(EnumType.STRING)
     private DriverType driverType;
 
+    @Getter
     @Column(name = "begin_datetime", nullable=false, updatable=false)
-    private LocalDateTime beginLocalDateTime;
+    private LocalDateTime beginTimestamp;
 
+    @Getter
     @Column(name = "end_datetime", nullable=false, updatable=false)
-    private LocalDateTime endLocalDateTime;
+    private LocalDateTime endTimestamp;
 
+    @Getter
     @Column(name = "uuid", columnDefinition = "BINARY(16)", nullable=false, updatable=false, unique=true)
     private UUID uuid = UUID.randomUUID();
 
-    public ArchivedSpot(final Spot spot, final LocalDateTime endLocalDateTime) throws IncorrectFinishDateException {
+    public ArchivedSpot(final Spot spot, final LocalDateTime endTimestamp) throws IncorrectFinishDateException {
         Objects.requireNonNull(spot, "Spot cannot be null");
 
-        if (endLocalDateTime.isBefore(spot.getBeginDatetime())) {
-            throw new IncorrectFinishDateException(spot.getBeginDatetime(), endLocalDateTime);
+        if (endTimestamp.isBefore(spot.getBeginDatetime())) {
+            throw new IncorrectFinishDateException(spot.getBeginDatetime(), endTimestamp);
         }
         this.vehiclePlate = spot.getVehiclePlate();
         this.driverType = spot.getDriverType();
-        this.beginLocalDateTime = spot.getBeginDatetime();
-        this.endLocalDateTime = endLocalDateTime;
+        this.beginTimestamp = spot.getBeginDatetime();
+        this.endTimestamp = endTimestamp;
     }
 
     public ArchivedSpot(String defaultVehiclePlate, DriverType regular, LocalDateTime defBeginDateTime, LocalDateTime defEndDateTime) {
         this.vehiclePlate = defaultVehiclePlate;
         this.driverType = regular;
-        this.beginLocalDateTime = defBeginDateTime;
-        this.endLocalDateTime = defEndDateTime;
+        this.beginTimestamp = defBeginDateTime;
+        this.endTimestamp = defEndDateTime;
     }
 
     @Override
@@ -91,13 +96,13 @@ public final class ArchivedSpot implements Serializable {
                 "id=" + id +
                 ", vehiclePlate='" + vehiclePlate + '\'' +
                 ", driverType=" + driverType +
-                ", beginLocalDateTime=" + beginLocalDateTime +
-                ", endLocalDateTime=" + endLocalDateTime +
+                ", beginLocalDateTime=" + beginTimestamp +
+                ", endLocalDateTime=" + endTimestamp +
                 '}';
     }
 
     public Optional<BigDecimal> getFee() {
-        if (Objects.nonNull(getEndLocalDateTime()) && checkFinishDate()) {
+        if (Objects.nonNull(getEndTimestamp()) && checkFinishDate()) {
             final BigDecimal fee = getBasicFee();
             final BigDecimal rate = CurrencyRate.PLN.getRate();
 
@@ -108,11 +113,11 @@ public final class ArchivedSpot implements Serializable {
     }
 
     private boolean checkFinishDate() {
-        return getEndLocalDateTime().isAfter(getBeginLocalDateTime());
+        return getEndTimestamp().isAfter(getBeginTimestamp());
     }
 
     public Optional<BigDecimal> getFee(final CurrencyRate cr) {
-        if (Objects.nonNull(getEndLocalDateTime())) {
+        if (Objects.nonNull(getEndTimestamp())) {
             BigDecimal fee = getBasicFee();
             return Optional.ofNullable(fee.multiply(cr.getRate()).setScale(1, BigDecimal.ROUND_CEILING));
         } else {
@@ -149,7 +154,7 @@ public final class ArchivedSpot implements Serializable {
      */
     private BigDecimal getPeriod() {
 
-        BigDecimal minutes = new BigDecimal(getBeginLocalDateTime().until(getEndLocalDateTime(), ChronoUnit.MINUTES));
+        BigDecimal minutes = new BigDecimal(getBeginTimestamp().until(getEndTimestamp(), ChronoUnit.MINUTES));
         BigDecimal div = new BigDecimal(60);
 
         return minutes.divide(div, BigDecimal.ROUND_CEILING);

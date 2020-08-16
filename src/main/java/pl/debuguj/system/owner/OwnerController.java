@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.debuguj.system.external.systems.CurrencyRateHandler;
 import pl.debuguj.system.spot.ArchivedSpot;
 import pl.debuguj.system.spot.ArchivedSpotRepo;
-import pl.debuguj.system.spot.BaseArchivedSpotRepo;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -34,7 +33,8 @@ class OwnerController {
     @GetMapping(value = "${uri.owner.income}")
     public HttpEntity<DailyIncome> getIncomePerDay(@Valid @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
-        final Collection<ArchivedSpot> archivedSpotList = archivedSpotRepo.getArchivedSpotByDate(date);
+
+        final Collection<ArchivedSpot> archivedSpotList = archivedSpotRepo.findAllByBeginTimestamp(date.atStartOfDay());
 
         if (archivedSpotList.size() > 0) {
             final BigDecimal income = archivedSpotList.stream()

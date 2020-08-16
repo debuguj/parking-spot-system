@@ -14,15 +14,15 @@ public final class Fee implements Serializable {
     private final String plate;
     private final LocalDateTime startTime;
     private final LocalDateTime stopTime;
-    private final BigDecimal fee;
+    private final String fee;
 
     public Fee(final ArchivedSpot archivedSpot) {
         if (!Objects.nonNull(archivedSpot)) {
             throw new NullArchivedSpotException();
         }
         this.plate = archivedSpot.getVehiclePlate();
-        this.startTime = archivedSpot.getBeginLocalDateTime();
-        this.stopTime = archivedSpot.getEndLocalDateTime();
-        this.fee = archivedSpot.getFee().get();
+        this.startTime = archivedSpot.getBeginTimestamp();
+        this.stopTime = archivedSpot.getEndTimestamp();
+        this.fee = archivedSpot.getFee().map(Objects::toString).orElseThrow(IllegalArgumentException::new);
     }
 }
