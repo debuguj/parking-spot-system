@@ -5,7 +5,6 @@ import pl.debuguj.system.exceptions.NullArchivedSpotException;
 import pl.debuguj.system.spot.ArchivedSpot;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 

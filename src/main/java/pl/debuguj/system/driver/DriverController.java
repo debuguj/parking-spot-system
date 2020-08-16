@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.debuguj.system.exceptions.VehicleActiveInDbException;
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException;
-import pl.debuguj.system.spot.*;
+import pl.debuguj.system.spot.ArchivedSpot;
+import pl.debuguj.system.spot.ArchivedSpotRepo;
+import pl.debuguj.system.spot.Spot;
+import pl.debuguj.system.spot.SpotRepo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
