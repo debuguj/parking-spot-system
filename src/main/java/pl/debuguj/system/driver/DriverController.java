@@ -45,7 +45,6 @@ class DriverController {
 
         final Spot spot = spotRepo.deleteByVehiclePlate(plate).orElseThrow(() -> new VehicleNotExistsInDbException(plate));
 
-
         return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
                 .map(archivedSpot -> ResponseEntity.ok().body(new Fee(archivedSpot)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
