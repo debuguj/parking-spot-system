@@ -180,7 +180,7 @@ class ArchivedSpotSpec extends Specification {
 
         then: 'invalidArchivesSpot as null'
         !invalidArchivedSpot
-        
+
         and: 'NullPointer throw'
         thrown(NullPointerException)
     }
