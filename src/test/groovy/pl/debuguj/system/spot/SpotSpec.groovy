@@ -25,7 +25,7 @@ class SpotSpec extends Specification {
     @Shared LocalDateTime defaultDateTime = LocalDateTime.now()
     @Shared String defaultVehiclePlate = 'WZE12345'
 
-    @Shared Set<ArchivedSpot> spots = new HashSet<>()
+    @Shared Set<Spot> spots = new HashSet<>()
 
     def setupSpec() {
         def vf = Validation.buildDefaultValidatorFactory()
@@ -62,7 +62,7 @@ class SpotSpec extends Specification {
         entityManager.persistAndFlush(spot)
 
         and: 'spot was found'
-        Spot foundSpot = entityManager.find(Spot.class, spot.getVehiclePlate())
+        Spot foundSpot = entityManager.find(Spot.class, spot.vehiclePlate)
 
         and: 'flush persistent context'
         entityManager.flush()
@@ -76,7 +76,7 @@ class SpotSpec extends Specification {
         entityManager.persistAndFlush(spot)
 
         and: 'spot was found'
-        Spot found = entityManager.find(Spot.class, spot.getVehiclePlate())
+        Spot found = entityManager.find(Spot.class, spot.vehiclePlate)
 
         and: 'flush persistent context'
         entityManager.flush()
@@ -96,7 +96,7 @@ class SpotSpec extends Specification {
         entityManager.persistAndFlush(spot)
 
         and: 'spot was found'
-        Spot found = entityManager.find(Spot.class, spot.getVehiclePlate())
+        Spot found = entityManager.find(Spot.class, spot.vehiclePlate)
 
         and: 'detached object'
         entityManager.detach(found)
@@ -110,13 +110,13 @@ class SpotSpec extends Specification {
         entityManager.persistAndFlush(spot)
 
         and: 'archived spot was found'
-        Spot found = entityManager.find(Spot.class, spot.getVehiclePlate())
+        Spot found = entityManager.find(Spot.class, spot.vehiclePlate)
 
         then: 'parameters should be valid'
         with(found){
-            vehiclePlate == found.getVehiclePlate()
-            driverType == found.getDriverType()
-            beginDatetime == found.getBeginDatetime()
+            vehiclePlate == spot.vehiclePlate
+            driverType == spot.driverType
+            beginDatetime == spot.beginDatetime
         }
     }
 
