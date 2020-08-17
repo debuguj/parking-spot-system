@@ -79,7 +79,7 @@ class ArchivedSpotSpec extends Specification {
         entityManager.persistAndFlush(archivedSpot)
 
         and: 'archived spot was found'
-        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.id)
 
         and: 'flush persistent context'
         entityManager.flush()
@@ -93,7 +93,7 @@ class ArchivedSpotSpec extends Specification {
         entityManager.persistAndFlush(archivedSpot)
 
         and: 'archived spot was found'
-        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.id)
 
         and: 'flush persistent context'
         entityManager.flush()
@@ -113,7 +113,7 @@ class ArchivedSpotSpec extends Specification {
         entityManager.persistAndFlush(archivedSpot)
 
         and: 'archived spot was found'
-        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+        ArchivedSpot foundArchivedSpot = entityManager.find(ArchivedSpot.class, archivedSpot.id)
 
         and: 'detached object'
         entityManager.detach(foundArchivedSpot)
@@ -127,15 +127,15 @@ class ArchivedSpotSpec extends Specification {
         entityManager.persistAndFlush(archivedSpot)
 
         and: 'archived spot was found'
-        ArchivedSpot found = entityManager.find(ArchivedSpot.class, archivedSpot.getId())
+        ArchivedSpot found = entityManager.find(ArchivedSpot.class, archivedSpot.id)
 
         then: 'parameters should be valid'
         with(archivedSpot){
-            vehiclePlate == found.getVehiclePlate()
-            driverType == found.getDriverType()
-            beginTimestamp == found.getBeginTimestamp()
-            endTimestamp == found.getEndTimestamp()
-            uuid == found.getUuid()
+            vehiclePlate == found.vehiclePlate
+            driverType == found.driverType
+            beginTimestamp == found.beginTimestamp
+            endTimestamp == found.endTimestamp
+            uuid == found.uuid
         }
     }
 
@@ -173,13 +173,16 @@ class ArchivedSpotSpec extends Specification {
         }
     }
 
-    def 'should return empty optional for fee because of null finish date'() {
-        given: 'archive spot with invalid finish date'
+    def 'should throw NullPointerException'() {
+        when: 'archive spot with invalid finish date'
         def invalidArchivedSpot = new ArchivedSpot(
                 defaultVehiclePlate, DriverType.REGULAR, defBeginTimestamp, null)
 
-        expect: 'empty optional'
-        Optional.empty() == invalidArchivedSpot.getFee(currencyRate)
+        then: 'invalidArchivesSpot as null'
+        !invalidArchivedSpot
+        
+        and: 'NullPointer throw'
+        thrown(NullPointerException)
     }
 
     def 'should throw an exception because finish date is before start date'() {

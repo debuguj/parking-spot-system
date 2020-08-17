@@ -66,7 +66,12 @@ public final class ArchivedSpot implements Serializable {
     }
 
     public ArchivedSpot(final String defaultVehiclePlate, final DriverType regular, final LocalDateTime beginDateTime, final LocalDateTime endDateTime) {
-        if (endDateTime.isBefore(beginDateTime)) {
+        Objects.requireNonNull(defaultVehiclePlate);
+        Objects.requireNonNull(regular);
+        Objects.requireNonNull(beginDateTime);
+        Objects.requireNonNull(endDateTime);
+
+        if ( endDateTime.isBefore(beginDateTime)) {
             throw new IncorrectFinishDateException(beginDateTime, endTimestamp);
         }
         this.vehiclePlate = defaultVehiclePlate;
