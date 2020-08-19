@@ -17,7 +17,6 @@ import pl.debuguj.system.spot.SpotRepo;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by GB on 07.03.20.
@@ -48,13 +47,5 @@ class DriverController {
         return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
                 .map(archivedSpot -> ResponseEntity.ok().body(new Fee(archivedSpot)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
-    }
-
-    @PostMapping(value = "${uri.simple}")
-    public HttpEntity<Date> simpleReturn(@PathVariable @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$") String plate,
-                                         @RequestBody @Valid Spot spot) {
-        //spotRepo.findByVehiclePlate(spot.getVehiclePlate()).orElseThrow(() -> new VehicleActiveInDbException(spot.getVehiclePlate()));
-        //final Spot savedSpot = spotRepo.save(spot).orElseThrow(() -> new VehicleCannotBeRegisteredInDbException(spot.getVehiclePlate()));
-        return new ResponseEntity<>(new Date(), HttpStatus.OK);
     }
 }

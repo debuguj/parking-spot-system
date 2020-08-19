@@ -1,4 +1,7 @@
 package pl.debuguj.system.config;
 
-public class SecurityConfig {
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+class SecurityConfig {
 }

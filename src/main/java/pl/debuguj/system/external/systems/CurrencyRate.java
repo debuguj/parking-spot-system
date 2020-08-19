@@ -34,7 +34,4 @@ public final class CurrencyRate {
         this.rate = rate;
         this.currency = currency;
     }
-
-    
-
 }
