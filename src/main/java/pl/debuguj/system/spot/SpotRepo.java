@@ -12,6 +12,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface SpotRepo extends Repository<Spot, String> {
 
+    @Transactional
     Optional<Spot> save(final Spot spot);
 
     Optional<Spot> findByVehiclePlate(final String vehiclePlate);
