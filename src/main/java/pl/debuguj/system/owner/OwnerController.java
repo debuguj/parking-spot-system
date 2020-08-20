@@ -31,7 +31,7 @@ class OwnerController {
     private final CurrencyRateHandler currencyRateHandler;
 
     @GetMapping(value = "${uri.owner.income}")
-    public HttpEntity<DailyIncome> getIncomePerDay(@Valid @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public HttpEntity<DailyIncome> getIncomePerDay(@PathVariable @Valid @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
 
         final Collection<ArchivedSpot> archivedSpotList = archivedSpotRepo.findAllByBeginTimestamp(date.atStartOfDay());

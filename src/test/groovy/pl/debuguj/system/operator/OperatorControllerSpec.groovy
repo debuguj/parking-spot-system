@@ -36,6 +36,7 @@ class OperatorControllerSpec  extends Specification {
     @Shared
     Spot spot
     static String vehiclePlate = 'WZE12345'
+    static String wrongVehiclePlate = 'A12345'
 
     def setupSpec() {
         spot = new Spot(vehiclePlate, DriverType.REGULAR, LocalDateTime.now())
@@ -74,5 +75,17 @@ class OperatorControllerSpec  extends Specification {
 
         and: 'correct type of context negotiation'
         results.andExpect(content().contentType('application/json'))
+    }
+
+    def 'should validate incorrect'(){
+        given: 'exception returned by findVehicleByPlate method'
+        spotRepo.findByVehiclePlate(_ as String) >> Optional.of(spot)
+
+        when: 'perform request'
+        def results = mockMvc.perform(get(uriCheckVehicle, wrongVehiclePlate)
+                .contentType('application/json'))
+
+        then: 'return status 200'
+        results.andExpect(status().is4xxClientError())
     }
 }

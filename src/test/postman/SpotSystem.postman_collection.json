@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "036be6c1-789f-48f2-89de-ec50e46022b2",
+		"_postman_id": "1e3a67c7-c537-4b0d-b71e-eb0a3e233e17",
 		"name": "SpotSystem",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "http://localhost:8080/spots",
+			"name": "http://localhost:8085/spots",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -41,7 +41,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/spots/WCS12347?finishDate=2020-07-03T08:00:00.000",
+			"name": "http://localhost:8085/spots/WCS12347?finishDate=2020-07-03T08:00:00.000",
 			"request": {
 				"method": "PATCH",
 				"header": [],
@@ -71,7 +71,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/verification/WCS12347",
+			"name": "http://localhost:8085/verification/WCS12347",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -91,17 +91,17 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/income/2020-07-03",
+			"name": "http://localhost:8085/income/2020-07-03",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/income/2020-07-03",
+					"raw": "http://localhost:8085/income/2020-07-03",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8085",
 					"path": [
 						"income",
 						"2020-07-03"
