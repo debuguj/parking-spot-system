@@ -1,16 +1,15 @@
 package pl.debuguj.system.spot;
 
-import pl.debuguj.system.driver.Fee;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
+@Repository
+@Transactional(readOnly = true)
+public interface ArchivedSpotRepo extends BaseArchivedSpotRepo<ArchivedSpot, Long>{
 
-public interface ArchivedSpotRepo {
-
-    Optional<Fee> save(final ArchivedSpot archivedSpot);
-
-    List<ArchivedSpot> getAllByDay(final LocalDate date);
-
+    List<ArchivedSpot> findAllByBeginTimestamp(LocalDateTime beginTimestamp);
 }

@@ -1,4 +1,4 @@
-package pl.debuguj.system.external;
+package pl.debuguj.system.external.systems;
 
 import lombok.Getter;
 
@@ -34,7 +34,4 @@ public final class CurrencyRate {
         this.rate = rate;
         this.currency = currency;
     }
-
-    
-
 }

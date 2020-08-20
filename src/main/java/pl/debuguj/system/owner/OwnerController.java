@@ -9,14 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import pl.debuguj.system.external.CurrencyRateHandler;
+import pl.debuguj.system.external.systems.CurrencyRateHandler;
 import pl.debuguj.system.spot.ArchivedSpot;
 import pl.debuguj.system.spot.ArchivedSpotRepo;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -33,10 +33,11 @@ class OwnerController {
     @GetMapping(value = "${uri.owner.income}")
     public HttpEntity<DailyIncome> getIncomePerDay(@Valid @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
-        List<ArchivedSpot> archivedSpotList = archivedSpotRepo.getAllByDay(date);
+
+        final Collection<ArchivedSpot> archivedSpotList = archivedSpotRepo.findAllByBeginTimestamp(date.atStartOfDay());
 
         if (archivedSpotList.size() > 0) {
-            BigDecimal income = archivedSpotList.stream()
+            final BigDecimal income = archivedSpotList.stream()
                     .map(as -> as.getFee(currencyRateHandler.getCurrencyRate()))
                     .filter(Optional::isPresent)
                     .map(Optional::get)

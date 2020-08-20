@@ -1,15 +1,21 @@
 package pl.debuguj.system.spot;
 
+
+import org.springframework.data.repository.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 /**
  * Created by GB on 07.03.2020.
  */
-public interface SpotRepo {
+@Transactional(readOnly = true)
+public interface SpotRepo extends Repository<Spot, String> {
 
+    @Transactional
     Optional<Spot> save(final Spot spot);
 
-    Optional<Spot> findVehicleByPlate(final String vehiclePlate);
+    Optional<Spot> findByVehiclePlate(final String vehiclePlate);
 
-    Optional<Spot> delete(final String plate);
+    int deleteByVehiclePlate(final String vehiclePlate);
 }

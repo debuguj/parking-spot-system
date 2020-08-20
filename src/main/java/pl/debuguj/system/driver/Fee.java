@@ -7,7 +7,6 @@ import pl.debuguj.system.spot.ArchivedSpot;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -22,8 +21,8 @@ public final class Fee implements Serializable {
             throw new NullArchivedSpotException();
         }
         this.plate = archivedSpot.getVehiclePlate();
-        this.startTime = archivedSpot.getBeginLocalDateTime();
-        this.stopTime = archivedSpot.getEndLocalDateTime();
-        this.fee = archivedSpot.getFee().get();
+        this.startTime = archivedSpot.getBeginTimestamp();
+        this.stopTime = archivedSpot.getEndTimestamp();
+        this.fee = archivedSpot.getFee().isPresent() ? archivedSpot.getFee().get() : BigDecimal.ZERO;
     }
 }

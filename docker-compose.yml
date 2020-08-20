@@ -1,0 +1,67 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '8085:8085'
+    expose:
+      - '8085'
+    depends_on:
+      - db
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/spots_system?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: user
+    networks:
+      - backend
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    expose:
+      - '3306'
+    environment:
+      MYSQL_DATABASE: spots_system
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend
+
+  prometheus:
+    image: prom/prometheus:v2.17.1
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    ports:
+      - '9090:9090'
+    network_mode: 'host'
+
+  grafana:
+    image: grafana/grafana:6.7.2
+    container_name: 'grafana'
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    depends_on:
+      - prometheus
+    network_mode: 'host'
+volumes:
+  db-data:
+  grafana_data: {}
+networks:
+  backend:

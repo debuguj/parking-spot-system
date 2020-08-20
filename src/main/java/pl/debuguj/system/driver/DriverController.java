@@ -7,9 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.debuguj.system.exceptions.IncorrectFinishDateException;
 import pl.debuguj.system.exceptions.VehicleActiveInDbException;
-import pl.debuguj.system.exceptions.VehicleCannotBeRegisteredInDbException;
 import pl.debuguj.system.exceptions.VehicleNotExistsInDbException;
 import pl.debuguj.system.spot.ArchivedSpot;
 import pl.debuguj.system.spot.ArchivedSpotRepo;
@@ -19,8 +17,6 @@ import pl.debuguj.system.spot.SpotRepo;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Optional;
 
 /**
  * Created by GB on 07.03.20.
@@ -46,18 +42,13 @@ class DriverController {
             @Valid @PathVariable @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$") String plate,
             @Valid @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") LocalDateTime finishDate) {
 
-        final Spot spot = spotRepo.delete(plate).orElseThrow(() -> new VehicleNotExistsInDbException(plate));
+        final Spot spot = spotRepo.findByVehiclePlate(plate)
+                .orElseThrow(() -> new VehicleNotExistsInDbException(plate));
+
+        spotRepo.deleteByVehiclePlate(plate);
 
         return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
-                .map(fee -> ResponseEntity.ok().body(fee))
+                .map(archivedSpot -> ResponseEntity.ok().body(new Fee(archivedSpot)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
-    }
-
-    @PostMapping(value = "${uri.simple}")
-    public HttpEntity<Date> simpleReturn(@PathVariable @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$") String plate,
-                                         @RequestBody @Valid Spot spot) {
-        //spotRepo.findByVehiclePlate(spot.getVehiclePlate()).orElseThrow(() -> new VehicleActiveInDbException(spot.getVehiclePlate()));
-        //final Spot savedSpot = spotRepo.save(spot).orElseThrow(() -> new VehicleCannotBeRegisteredInDbException(spot.getVehiclePlate()));
-        return new ResponseEntity<>(new Date(), HttpStatus.OK);
     }
 }

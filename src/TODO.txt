@@ -1,11 +1,8 @@
 BASIC:
-- add docker with db
-- add jmeter tests
-- transaction
-- add 2 profile: with h2 database, without database
+- remove domain model from REST
 - add security
 - add hateoas
-- hexagonale architecture
+- hexagonale architecture, ddd
 
 ADDITIONAL
-- add some feature (active_mq or rabbit_mq)
+- add some feature (active_mq or rabbit_mq or kafka)

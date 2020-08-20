@@ -105,4 +105,14 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(body, headers, status);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgumentException(Exception ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setError(ex.getMessage());
+        errorResponse.setStatus(HttpStatus.CONFLICT.value());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }
