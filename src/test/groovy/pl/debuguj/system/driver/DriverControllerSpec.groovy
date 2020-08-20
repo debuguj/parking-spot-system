@@ -106,7 +106,7 @@ class DriverControllerSpec extends Specification {
 
     def 'should return NotFound because vehicle is not active'() {
         given: 'throw exception when method find by plate invoked'
-        spotRepo.findVehicleByPlate(_ as String) >>
+        spotRepo.findByVehiclePlate(_ as String) >>
                 { throw new VehicleNotExistsInDbException('WZE12345') }
 
         when: 'perform request'
@@ -123,7 +123,7 @@ class DriverControllerSpec extends Specification {
 
     def 'should return correct fee'() {
         given: 'return optional of spot'
-        spotRepo.deleteByVehiclePlate(_ as String) >> Optional.of(spot)
+        spotRepo.findByVehiclePlate(_ as String) >> Optional.of(spot)
 
         and: 'fee from archived repository'
         archivedSpotRepo.save(_ as ArchivedSpot) >> Optional.of(archivedSpot)

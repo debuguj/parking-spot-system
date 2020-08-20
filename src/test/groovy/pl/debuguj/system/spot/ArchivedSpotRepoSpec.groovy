@@ -1,9 +1,7 @@
 package pl.debuguj.system.spot
 
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import spock.lang.Shared
 import spock.lang.Specification
@@ -56,7 +54,7 @@ class ArchivedSpotRepoSpec extends Specification{
         values.forEach(archivedSpotRepo.&save)
 
         when: "get values by date #startDate"
-        def spotStream = archivedSpotRepo.findAllByBeginTimestamp(startDate)
+        List<ArchivedSpot> spotStream = archivedSpotRepo.findAllByBeginTimestamp(startDate)
 
         then: 'Size of elements should be equal 2'
         spotStream.size() == 2

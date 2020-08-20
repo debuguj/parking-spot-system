@@ -16,5 +16,5 @@ public interface SpotRepo extends Repository<Spot, String> {
 
     Optional<Spot> findByVehiclePlate(final String vehiclePlate);
 
-    Optional<Spot> deleteByVehiclePlate(final String vehiclePlate);
+    int deleteByVehiclePlate(final String vehiclePlate);
 }

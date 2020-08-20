@@ -42,7 +42,10 @@ class DriverController {
             @Valid @PathVariable @Pattern(regexp = "^[A-Z]{2,3}[0-9]{4,5}$") String plate,
             @Valid @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS") LocalDateTime finishDate) {
 
-        final Spot spot = spotRepo.deleteByVehiclePlate(plate).orElseThrow(() -> new VehicleNotExistsInDbException(plate));
+        final Spot spot = spotRepo.findByVehiclePlate(plate)
+                .orElseThrow(() -> new VehicleNotExistsInDbException(plate));
+
+        spotRepo.deleteByVehiclePlate(plate);
 
         return archivedSpotRepo.save(new ArchivedSpot(spot, finishDate))
                 .map(archivedSpot -> ResponseEntity.ok().body(new Fee(archivedSpot)))

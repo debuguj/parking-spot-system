@@ -2,7 +2,6 @@ package pl.debuguj.system.spot
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import spock.lang.Shared
 import spock.lang.Specification
@@ -35,6 +34,13 @@ class SpotRepoSpec extends Specification{
 
         then: 'should return value in optional'
         opt != Optional.empty()
+
+        and: 'correct values'
+        opt.ifPresent({ s ->
+            assert s.vehiclePlate == spot.vehiclePlate
+            assert s.driverType == spot.driverType
+            assert s.beginDatetime == spot.beginDatetime
+        })
     }
 
     def 'should delete active spot'() {
@@ -63,5 +69,21 @@ class SpotRepoSpec extends Specification{
 
         then: 'should be empty'
         notFound == Optional.empty()
+    }
+
+    def 'should remove vehicle from database'() {
+        when: 'save spot to repo'
+        spotRepo.save(spot)
+
+        and: 'delete the same spot'
+        int removedSize = spotRepo.deleteByVehiclePlate('WZE12345')
+
+        then: 'should return removed spot'
+        removedSize == 1
+    }
+
+    def 'should return 0 because no spot was in database'() {
+        expect: 'delete not existed spot'
+        0 == spotRepo.deleteByVehiclePlate('WZE12345')
     }
 }
