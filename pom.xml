@@ -25,7 +25,7 @@
         <groovy-version>2.4.11</groovy-version>
         <lombok-version>1.18.12</lombok-version>
         <gmaven.plugin-version>1.6</gmaven.plugin-version>
-        <spring.boot.starter.web-version>2.2.5.RELEASE</spring.boot.starter.web-version>
+        <spring.boot.starter.web-version>2.5.12</spring.boot.starter.web-version>
         <spring.boot.starter.actuator-version>2.2.5.RELEASE</spring.boot.starter.actuator-version>
         <spring.boot.starter.jpa-version>2.2.5.RELEASE</spring.boot.starter.jpa-version>
         <spring.boot.starter.test-version>2.2.5.RELEASE</spring.boot.starter.test-version>
