@@ -22,7 +22,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java-version>1.8</java-version>
         <spock-version>1.2-groovy-2.4</spock-version>
-        <groovy-version>2.4.11</groovy-version>
+        <groovy-version>2.4.21</groovy-version>
         <lombok-version>1.18.12</lombok-version>
         <gmaven.plugin-version>1.6</gmaven.plugin-version>
         <spring.boot.starter.web-version>2.2.5.RELEASE</spring.boot.starter.web-version>
